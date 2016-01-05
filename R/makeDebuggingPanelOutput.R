@@ -115,26 +115,6 @@ makeDebuggingPanelOutput = function(session) {
                                               ))) ,
                                      tag("TD", list(HTML(paste0(rep("&nbsp;",15), collapse="")))),
                                      tag("TD",
-                                         list(
-                                           actionButton("evalButtonJS",
-                                                        HTML("<font color='red'> evaluate JS</font>"))
-                                           %>% tagAppendAttributes(
-                                             style="display: flex; justify-content:flex-end;")
-                                           # Cool! Too bad it doesn't work.
-                                           , checkboxInput(inputId="prependOutputPreambleToggle",
-                                                           value=FALSE,
-                                                           label="prependOutputPreambleToggle")
-                                           , checkboxInput(inputId="prependInputPreambleToggle",
-                                                           value=FALSE,
-                                                           label="prependInputPreambleToggle")
-                                         )
-                                     ),
-                                     tag("TD",
-                                         list(width=10, tags$textarea(id = "evalStringJS",
-                                                                      value=""))),
-                                     tag("TD", list(HTML(paste0(rep("&nbsp;",15), collapse="")))),
-
-                                     tag("TD",
                                          list(actionButton("evalButtonR",
                                                            HTML("<font color='red'> evaluate R</font>"))
                                               , HTML(paste0(rep("&nbsp;",25), collapse=""))
@@ -155,6 +135,25 @@ makeDebuggingPanelOutput = function(session) {
                                                       size="large",
                                                       uiOutput(outputId="evaluatedOutputR")))
                                      ),
+                                     tag("TD",
+                                         list(
+                                           actionButton("evalButtonJS",
+                                                        HTML("<font color='red'> evaluate JS</font>"))
+                                           %>% tagAppendAttributes(
+                                             style="display: flex; justify-content:flex-end;")
+                                           # Cool! Too bad it doesn't work.
+                                           , checkboxInput(inputId="prependOutputPreambleToggle",
+                                                           value=FALSE,
+                                                           label="prependOutputPreambleToggle")
+                                           , checkboxInput(inputId="prependInputPreambleToggle",
+                                                           value=FALSE,
+                                                           label="prependInputPreambleToggle")
+                                         )
+                                     ),
+                                     tag("TD",
+                                         list(width=10, tags$textarea(id = "evalStringJS",
+                                                                      value=""))),
+                                     tag("TD", list(HTML(paste0(rep("&nbsp;",15), collapse="")))),
                                      uiOutput(outputId='JSevaluation')
                                    )
                                )
