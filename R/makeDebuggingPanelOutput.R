@@ -22,7 +22,6 @@ makeDebuggingPanelOutput = function(session) {
       }
       assign('%&%',  function (a, b) paste(a, b, sep = ''))
       catn = function(...) cat(..., '\n')
-      `%>%` = magrittr:::`%>%`
 
       # Here begins the good stuff.
       output$evaluatedOutputR = renderUI({
