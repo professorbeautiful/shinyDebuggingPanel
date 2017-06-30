@@ -8,6 +8,9 @@ makeDebuggingPanelOutput(session)
 }
 \description{
 Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) inside your call to shinyServer(server.R),
-Place shinyDebuggingPanel::withdebuggingPanel() in your ui.R
+Place shinyDebuggingPanel::withDebuggingPanel() in your ui.R
+}
+\details{
+make sure your surver function has a third argument:  function(input, output, session)
 }
 
