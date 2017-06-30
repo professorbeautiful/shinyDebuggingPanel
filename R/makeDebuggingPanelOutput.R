@@ -1,15 +1,15 @@
 #' makeDebuggingPanelOutput
 #'
 ####' Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) inside your call to shinyServer(server.R),
-####' Place shinyDebuggingPanel::withdebuggingPanel() in your ui.R
+####' Place shinyDebuggingPanel::withDebuggingPanel() in your ui.R
 #'
 
 ## We begin with some convenient assignments and function.
 
 makeDebuggingPanelOutput = function(session) {
+  thisSession <<- session
   debugToolsExpression = expression(
     {
-      #thisSession <<- session
       rValuesDebugging = reactiveValues()
       wasClicked =  function(button) {
         if(exists('input'))
