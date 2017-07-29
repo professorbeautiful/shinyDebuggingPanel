@@ -3,12 +3,12 @@
 ####' Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) inside your call to shinyServer(server.R),
 ####' Place shinyDebuggingPanel::withDebuggingPanel() in your ui.R
 #'
-####' Make sure your server function has a third argument:  function(input, output, session)
+#'####' Make sure your server function has a third argument:  function(input, output, session)
 
 ## We begin with some convenient assignments and function.
 
-makeDebuggingPanelOutput = function(session) {
-  thisSession <<- session
+makeDebuggingPanelOutput = function() {
+  thisSession <<- shiny::getDefaultReactiveDomain()
   debugToolsExpression = expression(
     {
       rValuesDebugging = reactiveValues()
