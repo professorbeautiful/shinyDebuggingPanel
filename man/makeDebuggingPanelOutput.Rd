@@ -4,7 +4,7 @@
 \alias{makeDebuggingPanelOutput}
 \title{makeDebuggingPanelOutput}
 \usage{
-makeDebuggingPanelOutput(session)
+makeDebuggingPanelOutput(session = NULL)
 }
 \arguments{
 \item{session}{The shiny session; default is  shiny::getDefaultReactiveDomain()s}

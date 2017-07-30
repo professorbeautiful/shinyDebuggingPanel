@@ -8,10 +8,12 @@
 
 ## We begin with some convenient assignments and function.
 
-makeDebuggingPanelOutput = function(session) {
-  thisSession <<- ifelse(missing(session),
-                         shiny::getDefaultReactiveDomain(),
-                         session)
+makeDebuggingPanelOutput = function(session=NULL) {
+  #thisSession <<- shiny::getDefaultReactiveDomain()
+  # either is OK, but the ifelse fails, both with is.null() and  missing().
+  if(is.null(session))
+    thisSession <<- shiny::getDefaultReactiveDomain()
+  else thisSession <<- session
   debugToolsExpression = expression(
     {
       rValuesDebugging = reactiveValues()
