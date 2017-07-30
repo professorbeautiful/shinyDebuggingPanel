@@ -7,7 +7,7 @@ Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
 Description: Provides support for including a handy panel in your shiny app
     making it easier to debug it.
-License: GPL (>=2)
+License: file LICENSE
 Depends:
     R (>= 2.10.1),
     shiny,
