@@ -4,13 +4,15 @@
 \alias{makeDebuggingPanelOutput}
 \title{makeDebuggingPanelOutput}
 \usage{
-makeDebuggingPanelOutput()
+makeDebuggingPanelOutput(session)
+}
+\arguments{
+\item{session}{The shiny session; default is  shiny::getDefaultReactiveDomain()s}
 }
 \description{
-Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) inside your call to shinyServer(server.R),
-Place shinyDebuggingPanel::withDebuggingPanel() in your ui.R
+Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) inside your call to shinyServer(server.R). Place shinyDebuggingPanel::withDebuggingPanel() in your ui.R.
 }
 \details{
-####' Make sure your server function has a third argument:  function(input, output, session)
+Make sure your server function has the third argument:  function(input, output, session)
 }
 

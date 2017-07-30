@@ -4,6 +4,6 @@ require(shiny)
 
 shinyServerFunction = function(input, output, session) {
 
-  makeDebuggingPanelOutput(session)
+  makeDebuggingPanelOutput()
 }
 shinyServer(shinyServerFunction)
