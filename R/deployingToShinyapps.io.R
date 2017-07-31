@@ -22,8 +22,8 @@ function(app=dir('inst')[1], user='professorbeautiful', project=basename(getwd()
       deployApp(...)
     },
     finally={
-      cat(paste0("shinyapps::showLogs(appDir = 'inst/", app, "')\n"))
-          setwd(packageWD)
+      cat(paste0("shinyapps::showLogs(appPath = 'inst/", app,"')"), '\n')
+      setwd(packageWD)
     }
     )
   }
@@ -33,5 +33,5 @@ function(app=dir('inst')[1], user='professorbeautiful', project=basename(getwd()
 .runDeployed =
 function(app="shinyElicit"){
   system("open https://trials.shinyapps.io/" %&% app)
-  cat("shinyapps::showLogs(appDir = 'inst/" %&% app %&% "')\n")
+  cat(paste0("shinyapps::showLogs(appPath = 'inst/", app,"')"), '\n')
 }
