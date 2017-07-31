@@ -22,7 +22,7 @@ function(app=dir('inst')[1], user='professorbeautiful', project=basename(getwd()
       deployApp(...)
     },
     finally={
-      cat(paste0("shinyapps::showLogs(appDir = 'inst/", app, "')\n"))
+      cat(paste0("shinyapps::showLogs(appPath = 'inst/", app, "')\n"))
           setwd(packageWD)
     }
     )
