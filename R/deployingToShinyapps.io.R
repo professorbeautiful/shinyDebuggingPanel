@@ -25,8 +25,8 @@ function(app=dir('inst')[1], user='professorbeautiful', project=basename(getwd()
       cat(paste0("shinyapps::showLogs(appPath = 'inst/", app,"')"), '\n')
       setwd(packageWD)
     }
-    )
-  }
+    ) # end tryCatch
+  } # end app loop
 }
 
 
