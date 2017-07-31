@@ -2,6 +2,6 @@ name: inst
 account: trials
 server: shinyapps.io
 appId: 200503
-bundleId: 922042
+bundleId: 922056
 url: https://trials.shinyapps.io/inst/
-when: 1501517217.82272
+when: 1501517858.94441
