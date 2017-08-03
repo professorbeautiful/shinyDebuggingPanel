@@ -32,7 +32,7 @@ makeDebuggingPanelOutput = function(session=NULL) {
       # Here begins the good stuff.
       output$evaluatedOutputR = renderUI({
         if(wasClicked(input$evalButtonR)) {
-          cat('evaluatedOutputR\n')
+          # cat('evaluatedOutputR\n')
           evalString = isolate(input$evalStringR)
           capturedOutput =  capture.output(eval(parse(text=evalString)))
           HTML(paste(collapse='<br>', capturedOutput))
@@ -94,7 +94,7 @@ makeDebuggingPanelOutput = function(session=NULL) {
 
       output$shiny.trace.text = renderText({
         eval(options(shiny.trace=input$traceCheckbox), envir = .GlobalEnv);
-        cat("shiny.trace: ", options("shiny.trace")[[1]], "\n")
+        #cat("shiny.trace: ", options("shiny.trace")[[1]], "\n")
         if( options("shiny.trace")[[1]] != input$traceCheckbox)
           cat('Error: options("shiny.trace")[[1]] should equal input$traceCheckbox', "\n");
         paste("trace=", input$traceCheckbox)
@@ -170,7 +170,7 @@ makeDebuggingPanelOutput = function(session=NULL) {
 
     })  ### end of call to expression()
   parentFrameNumber = 1
-  cat('parentFrameNumber = ', parentFrameNumber, '\n')
+  #cat('parentFrameNumber = ', parentFrameNumber, '\n')
   eval(debugToolsExpression, envir = parent.frame(parentFrameNumber))
-  cat('debugToolsExpression eval done ', '\n')
+  #cat('debugToolsExpression eval done ', '\n')
 }
