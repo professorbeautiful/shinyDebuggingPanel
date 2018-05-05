@@ -97,7 +97,8 @@ makeDebuggingPanelOutput = function(session=NULL) {
         #cat("shiny.trace: ", options("shiny.trace")[[1]], "\n")
         if( options("shiny.trace")[[1]] != input$traceCheckbox)
           cat('Error: options("shiny.trace")[[1]] should equal input$traceCheckbox', "\n");
-        paste("trace=", input$traceCheckbox)
+        paste("shiny trace=",
+              switch(input$traceCheckbox, `TRUE`='on', 'off' ))
       })   #### OK this works now.
 
 
@@ -106,19 +107,23 @@ makeDebuggingPanelOutput = function(session=NULL) {
             singleton(tags$script(paste(
               "outputPreambleJS = '", outputPreambleJS, "';")))
             ,
-            checkboxInput(inputId='debugToolsCheckbox', value=FALSE,
-                          label=em(strong("Debugging aids"))),
+            fluidRow( style="color: blue",
+              column(6, checkboxInput(
+                inputId='debugToolsCheckbox', value=FALSE,
+                label=em(strong("Debugging for shiny apps: evaluate R and JS")))
+                ),
+              column(6, checkboxInput(
+                inputId="traceCheckbox",
+                value=FALSE,
+                label=em(strong(textOutput("shiny.trace.text")))
+              )
+              )
+            ),
             conditionalPanel('input.debugToolsCheckbox',
                              tag("table", list(
                                tag("tr",
                                    list(
-                                     tag("TD",
-                                         list(width=120, style="color: blue",
-                                              checkboxInput(inputId="traceCheckbox",
-                                                            value=FALSE,
-                                                            label=textOutput("shiny.trace.text")
-                                              ))) ,
-                                     tag("TD", list(HTML(paste0(rep("&nbsp;",15), collapse="")))),
+                                     tag("TD", list(HTML(paste0(rep("&nbsp;",5), collapse="")))),
                                      tag("TD",
                                          list(actionButton("evalButtonR",
                                                            HTML("<font color='red'> evaluate R</font>"))
@@ -129,8 +134,13 @@ makeDebuggingPanelOutput = function(session=NULL) {
                                      ),
                                      tag("TD", list(style="color:red", HTML("&rarr;"))),
                                      tag("TD",
-                                         list(width=10, tags$textarea(id = "evalStringR",
-                                                                      value=""))),
+                                         list(width=400, # tagAppendAttributes(
+                                         #   style="",
+                                           #style="width:500px; height:150px;",
+                                           tags$textarea(
+                                             id = "evalStringR",
+                                             value="")) )#)
+                                     ,
                                      tag("TD",
                                          list(width=800,
                                               style='text-align:"right"; color:green',
