@@ -8,9 +8,11 @@
 
 ## We begin with some convenient assignments and function.
 
-makeDebuggingPanelOutput = function(session=NULL) {
+makeDebuggingPanelOutput = function(session=NULL,
+                                    toolsInitialState=FALSE) {
   #thisSession <<- shiny::getDefaultReactiveDomain()
   # either is OK, but the ifelse fails, both with is.null() and  missing().
+  toolsInitialState <<- toolsInitialState
   if(is.null(session))
     thisSession <<- shiny::getDefaultReactiveDomain()
   else thisSession <<- session
@@ -109,7 +111,7 @@ makeDebuggingPanelOutput = function(session=NULL) {
             ,
             fluidRow( style="color: blue",
               column(6, checkboxInput(
-                inputId='debugToolsCheckbox', value=TRUE,
+                inputId='debugToolsCheckbox', value=toolsInitialState,
                 label=em(strong("Debug a shiny apps: evaluate R and JS")))
                 ),
               column(6, checkboxInput(
