@@ -4,5 +4,6 @@
 #'
 testDebuggingPanel = function() {
   require(shiny)
-  runApp(path.package("shinyDebuggingPanel"))
+  runApp(system.file(package = "shinyDebuggingPanel",
+                     "shinyDebuggingPanel"))
 }
