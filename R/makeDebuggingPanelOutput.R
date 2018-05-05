@@ -98,7 +98,7 @@ makeDebuggingPanelOutput = function(session=NULL) {
         if( options("shiny.trace")[[1]] != input$traceCheckbox)
           cat('Error: options("shiny.trace")[[1]] should equal input$traceCheckbox', "\n");
         paste("shiny trace=",
-              switch(input$traceCheckbox, `TRUE`='on', 'off' ))
+              ifelse(input$traceCheckbox, 'on', 'off'))
       })   #### OK this works now.
 
 
@@ -109,8 +109,8 @@ makeDebuggingPanelOutput = function(session=NULL) {
             ,
             fluidRow( style="color: blue",
               column(6, checkboxInput(
-                inputId='debugToolsCheckbox', value=FALSE,
-                label=em(strong("Debugging for shiny apps: evaluate R and JS")))
+                inputId='debugToolsCheckbox', value=TRUE,
+                label=em(strong("Debug a shiny apps: evaluate R and JS")))
                 ),
               column(6, checkboxInput(
                 inputId="traceCheckbox",
@@ -119,64 +119,76 @@ makeDebuggingPanelOutput = function(session=NULL) {
               )
               )
             ),
-            conditionalPanel('input.debugToolsCheckbox',
-                             tag("table", list(
-                               tag("tr",
-                                   list(
-                                     tag("TD", list(HTML(paste0(rep("&nbsp;",5), collapse="")))),
-                                     tag("TD",
-                                         list(actionButton("evalButtonR",
-                                                           HTML("<font color='red'> evaluate R</font>"))
-                                              , HTML(paste0(rep("&nbsp;",25), collapse=""))
-                                              , br()
-                                              , br()
-                                         )
-                                     ),
-                                     tag("TD", list(style="color:red", HTML("&rarr;"))),
-                                     tag("TD",
-                                         list(width=400, # tagAppendAttributes(
-                                         #   style="",
-                                           #style="width:500px; height:150px;",
-                                           tags$textarea(
-                                             id = "evalStringR",
-                                             value="")) )#)
-                                     ,
-                                     tag("TD",
-                                         list(width=800,
-                                              style='text-align:"right"; color:green',
-                                              bsModal(id = 'evaluateR_popup',
-                                                      title="Output of R command",
-                                                      trigger = "evalButtonR",
-                                                      size="large",
-                                                      uiOutput(outputId="evaluatedOutputR")))
-                                     ),
-                                     tag("TD",
-                                         list(
-                                           tagAppendAttributes(
-                                             style="display: flex; justify-content:flex-end;",
-                                             actionButton("evalButtonJS",
-                                                          HTML("<font color='red'> evaluate JS</font>")))
-                                           # Cool! Too bad it doesn't work.
-                                           , checkboxInput(inputId="prependOutputPreambleToggle",
-                                                           value=FALSE,
-                                                           label="prependOutputPreambleToggle")
-                                           , checkboxInput(inputId="prependInputPreambleToggle",
-                                                           value=FALSE,
-                                                           label="prependInputPreambleToggle")
-                                         )
-                                     ),
-                                     tag("TD",
-                                         list(width=10, tags$textarea(id = "evalStringJS",
-                                                                      value=""))),
-                                     tag("TD", list(HTML(paste0(rep("&nbsp;",15), collapse="")))),
-                                     uiOutput(outputId='JSevaluation')
-                                   )
-                               )
-                             )
-                             )
+            conditionalPanel(
+              'input.debugToolsCheckbox',
+              fluidRow(
+                column(7, wellPanel(
+                  fluidRow(
+                    column(4,
+                           column(6,
+                                  HTML(rep("&nbsp;", 1)),
+                           actionButton("evalButtonR",
+                                               HTML("<font color='red'> evaluate R</font>"))
+                           ),
+                           column(3,
+                                  tagAppendAttributes(
+                                    style="color:red",
+                                    span(br(),
+                                         HTML("&nbsp;&nbsp;&nbsp;&rarr;"))
+                                  )
+                           )
+                    )
+                    ,
+                    column(6,
+                           tagAppendAttributes(
+                             #   style="",
+                             style="width:350px; height:150px;",
+                             tags$textarea(
+                               id = "evalStringR", label="R code",
+                               value=""))
+                    )#)
+                    ,
+                    tagAppendAttributes(width=800,
+                         style='text-align:"right"; color:green',
+                         bsModal(id = 'evaluateR_popup',
+                                 title="Output of R command",
+                                 trigger = "evalButtonR",
+                                 size="large",
+                                 uiOutput(outputId="evaluatedOutputR")))
+                  ))),
+                  column(5,
+                         wellPanel(fluidRow(
+                           column(3, tagAppendAttributes(
+                             style="display: flex; justify-content:flex-end;",
+                             actionButton("evalButtonJS",
+                                          HTML("<font color='red'> evaluate JS</font>")))
+                           )# Cool! Too bad it doesn't work.
+                           ,   column(2,
+                                      tagAppendAttributes(
+                                        style="color:red",
+                                        span(br(),
+                                             HTML("&nbsp;&nbsp;&nbsp;&rarr;"))
+                                      )
+                           )
+                           , column(7,
+                                    tags$textarea(id = "evalStringJS",
+                                                  value="") )
+                         )
+                         , br()
+                         , checkboxInput(inputId="prependOutputPreambleToggle",
+                                         value=FALSE,
+                                         label="prependOutputPreambleToggle")
+                         , checkboxInput(inputId="prependInputPreambleToggle",
+                                         value=FALSE,
+                                         label="prependInputPreambleToggle")
+                         )
+                  ),
+                #list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
+                uiOutput(outputId='JSevaluation')
+              )
             )
         )
-      })
+      }) ### end callto renderUI
 
     })  ### end of call to expression()
   parentFrameNumber = 1
