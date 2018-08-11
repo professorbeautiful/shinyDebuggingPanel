@@ -8,11 +8,14 @@
 
 ## We begin with some convenient assignments and function.
 
-makeDebuggingPanelOutput = function(session=NULL,
-                                    toolsInitialState=FALSE) {
+makeDebuggingPanelOutput = function(
+  session=NULL,
+  toolsInitialState=FALSE,
+  condition='true') {
   #thisSession <<- shiny::getDefaultReactiveDomain()
   # either is OK, but the ifelse fails, both with is.null() and  missing().
   toolsInitialState <<- toolsInitialState
+  theShowDebuggerCondition <<- condition
   if(is.null(session))
     thisSession <<- shiny::getDefaultReactiveDomain()
   else thisSession <<- session
@@ -105,59 +108,61 @@ makeDebuggingPanelOutput = function(session=NULL,
 
 
       output$debugTools = renderUI({
-        div(style="background:darkGrey",
-            singleton(tags$script(paste(
-              "outputPreambleJS = '", outputPreambleJS, "';")))
-            ,
-            fluidRow( style="color: blue",
-              column(6, checkboxInput(
-                inputId='debugToolsCheckbox', value=toolsInitialState,
-                label=em(strong("Debug a shiny apps: evaluate R and JS")))
-                ),
-              column(6, checkboxInput(
-                inputId="traceCheckbox",
-                value=FALSE,
-                label=em(strong(textOutput("shiny.trace.text")))
-              )
-              )
-            ),
-            conditionalPanel(
-              'input.debugToolsCheckbox',
-              fluidRow(
-                column(7, wellPanel(
-                  fluidRow(
-                    column(4,
-                           column(6,
-                                  HTML(rep("&nbsp;", 1)),
-                           actionButton("evalButtonR",
-                                               HTML("<font color='red'> evaluate R</font>"))
-                           ),
-                           column(3,
-                                  tagAppendAttributes(
-                                    style="color:red",
-                                    span(br(),
-                                         HTML("&nbsp;&nbsp;&nbsp;&rarr;"))
-                                  )
-                           )
-                    )
-                    ,
-                    column(6,
-                           tagAppendAttributes(
-                             #   style="",
-                             style="width:350px; height:150px;",
-                             tags$textarea(
-                               id = "evalStringR", label="R code",
-                               value=""))
-                    )#)
-                    ,
-                    tagAppendAttributes(width=800,
-                         style='text-align:"right"; color:green',
-                         bsModal(id = 'evaluateR_popup',
-                                 title="Output of R command",
-                                 trigger = "evalButtonR",
-                                 size="large",
-                                 uiOutput(outputId="evaluatedOutputR")))
-                  ))),
+        shiny::conditionalPanel(
+          condition=theShowDebuggerCondition,
+          div(style="background:darkGrey",
+              singleton(tags$script(paste(
+                "outputPreambleJS = '", outputPreambleJS, "';")))
+              ,
+              fluidRow( style="color: blue",
+                        column(6, checkboxInput(
+                          inputId='debugToolsCheckbox', value=toolsInitialState,
+                          label=em(strong("Debug a shiny apps: evaluate R and JS")))
+                        ),
+                        column(6, checkboxInput(
+                          inputId="traceCheckbox",
+                          value=FALSE,
+                          label=em(strong(textOutput("shiny.trace.text")))
+                        )
+                        )
+              ),
+              conditionalPanel(
+                'input.debugToolsCheckbox',
+                fluidRow(
+                  column(7, wellPanel(
+                    fluidRow(
+                      column(4,
+                             column(6,
+                                    HTML(rep("&nbsp;", 1)),
+                                    actionButton("evalButtonR",
+                                                 HTML("<font color='red'> evaluate R</font>"))
+                             ),
+                             column(3,
+                                    tagAppendAttributes(
+                                      style="color:red",
+                                      span(br(),
+                                           HTML("&nbsp;&nbsp;&nbsp;&rarr;"))
+                                    )
+                             )
+                      )
+                      ,
+                      column(6,
+                             tagAppendAttributes(
+                               #   style="",
+                               style="width:350px; height:150px;",
+                               tags$textarea(
+                                 id = "evalStringR", label="R code",
+                                 value=""))
+                      )#)
+                      ,
+                      tagAppendAttributes(width=800,
+                                          style='text-align:"right"; color:green',
+                                          bsModal(id = 'evaluateR_popup',
+                                                  title="Output of R command",
+                                                  trigger = "evalButtonR",
+                                                  size="large",
+                                                  uiOutput(outputId="evaluatedOutputR")))
+                    ))),
                   column(5,
                          wellPanel(fluidRow(
                            column(3, tagAppendAttributes(
@@ -185,10 +190,11 @@ makeDebuggingPanelOutput = function(session=NULL,
                                          label="prependInputPreambleToggle")
                          )
                   ),
-                #list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
-                uiOutput(outputId='JSevaluation')
+                  #list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
+                  uiOutput(outputId='JSevaluation')
+                )
               )
-            )
+          )
         )
       }) ### end callto renderUI
 
