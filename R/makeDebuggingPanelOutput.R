@@ -19,7 +19,8 @@ makeDebuggingPanelOutput = function(
   if(is.null(session))
     thisSession <<- shiny::getDefaultReactiveDomain()
   else thisSession <<- session
-  rValuesDebugging_R <<- reactiveValues(evalStringHistory=list())
+  rValuesDebugging_R <<- reactiveValues(evalStringHistory=list(),
+                                        capturedOutput="")
   rValuesDebugging_JS <<- reactiveValues(evalStringHistory=list())
 
   debugToolsExpression = expression(
@@ -36,34 +37,26 @@ makeDebuggingPanelOutput = function(
       assign('%&%',  function (a, b) paste(a, b, sep = ''))
       catn = function(...) cat(..., '\n')
 
-      # Here begins the good stuff.
+      observeEvent(input$evalButtonR, {
+        print("saw input$evalButtonR")
+        evalString = isolate(input$evalStringR)
+        rValuesDebugging_R$evalStringHistory =
+          c(rValuesDebugging_R$evalStringHistory, evalString)
+        cat("length evalStringHistory = ",
+            length(rValuesDebugging_R$evalStringHistory),  '\n')
+        rValuesDebugging_R$capturedOutput =
+          capture.output(try(eval(parse(text=evalString))))
+        updateNumericInput(session = thisSession, inputId = 'idRlineNum',
+                           value = length(rValuesDebugging_R$evalStringHistory),
+                           max = length(rValuesDebugging_R$evalStringHistory))
+      })
+
       output$evaluatedOutputR = renderUI({
-        if(wasClicked(input$evalButtonR)) {
-          # cat('evaluatedOutputR\n')
-          evalString = isolate(input$evalStringR)
-          isolate({
-            rValuesDebugging_R$evalStringHistory =
-              c(rValuesDebugging_R$evalStringHistory, evalString)
-          })
-          capturedOutput =  capture.output(eval(parse(text=evalString)))
-          HTML(paste(collapse='<br>', capturedOutput))
+          HTML(paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
           #capturedOutput
           ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
-          ## The following might be useful later for up-arrowing through past expressions.
-          #if(is.null(rValuesDebugging_R$evalStringHistory))
-          #  rValuesDebugging_R$evalStringHistory = character(0)
-        }
       })
-      observeEvent(input$idrValuesDebugging_JSRlineNum, {
-        print(input$idJSlineNum)
-        if((input$idJSlineNum > 0) &
-           input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory)) {
-          print(rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
-          updateTextAreaInput('evalStringJS',
-                              value = rValuesDebugging_JS$evalStringHistory
-                              [[input$idJSlineNum]])
-        }
-      })
+
       outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
       # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
       inputPreambleJS <<- 'window.Shiny.shinyapp.$inputValues.'
@@ -71,7 +64,7 @@ makeDebuggingPanelOutput = function(
 
       observeEvent(input$idJSlineNum, {
         print(input$idJSlineNum)
-        if((input$idJSlineNum > 0) &
+        if(!is.na(input$idJSlineNum) & (input$idJSlineNum > 0) &
            input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory)) {
           print(rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
           updateTextAreaInput(session = thisSession, inputId = 'evalStringJS',
@@ -114,14 +107,16 @@ makeDebuggingPanelOutput = function(
 
       output$JSevaluation = renderUI({
         if(wasClicked(input$evalButtonJS) ) {
-          evalString = gsub('"', "'", isolate(input$evalStringJS)) # replace all DQ with SQ.
+          evalString = gsub('"', "'", isolate(input$evalStringJS))
+            # replace all DQ with SQ. May not always be the right fix.
           isolate({
             rValuesDebugging_JS$evalStringHistory =
               c(rValuesDebugging_JS$evalStringHistory, evalString);
+            cat('length(rValuesDebugging_JS$evalStringHistory)\n');
             print(length(rValuesDebugging_JS$evalStringHistory));
-            updateNumericInput(thisSession,
-                               'idJSnum',
-                               value=input$idJSnum + 1)
+            updateNumericInput(session = thisSession, inputId = 'idJSlineNum',
+                               value = length(rValuesDebugging_JS$evalStringHistory),
+                               max = length(rValuesDebugging_JS$evalStringHistory))
           })
           div(list(tags$script(
             paste0(
@@ -148,7 +143,7 @@ makeDebuggingPanelOutput = function(
 
       observeEvent(input$idRlineNum, {
         print(input$idRlineNum)
-        if((input$idRlineNum > 0) &
+        if(!is.na(input$idRlineNum) & (input$idRlineNum > 0) &
            input$idRlineNum <= length(rValuesDebugging_R$evalStringHistory)) {
           print(rValuesDebugging_R$evalStringHistory[[input$idRlineNum]])
           updateTextAreaInput(session = thisSession, inputId = 'evalStringR',
