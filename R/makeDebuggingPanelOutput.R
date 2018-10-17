@@ -182,9 +182,12 @@ makeDebuggingPanelOutput = function(
                   'input.id_languageChoice==="R"',
                   fluidRow(
                     column(2, offset = 1,
-                           actionButton("evalButtonR",
-                                        HTML("<font color='red'> evaluate R</font>")),
-                           numericInput('idRlineNum', label = '',
+                           actionButton(
+                             "evalButtonR",
+                             HTML(
+                               "<font color='dark red' style='font-weight:bold'> evaluate R</font>")),
+                           numericInput('idRlineNum',  label = "command\nhistory",
+                                        width = '100px',
                                         value = 1, min=1)
                     ),
                     column(9,
@@ -205,28 +208,23 @@ makeDebuggingPanelOutput = function(
                 conditionalPanel(
                   'input.id_languageChoice==="JS"',
                   fluidRow(
-                    column(2,
-                           actionButton("evalButtonJS",
-                                        HTML("<font color='red'> evaluate JS</font>")),
-                           numericInput('idJSlineNum', label = '',
-                                        value = 1, min=1)
+                    column(2, offset = 1,
+                           actionButton( inputId = "evalButtonJS",
+                            label = HTML(
+                               "<font color='dark red' style='font-weight:bold'> evaluate JS</font>")),
+                           numericInput('idJSlineNum', label = "command\nhistory",
+                                        width = '100px', value = 1, min=1)
                            ),
                     column(9, tagAppendAttributes(
                       style="width:550px; height:150px;",
                       tags$textarea(id = "evalStringJS",
-                                    value="") )
-                    )
-                  ),
-                  fluidRow(
-                    column(6,
+                                    value="") ),
                            checkboxInput(inputId="prependOutputPreambleToggle",
                                          value=FALSE,
-                                         label="prependOutputPreambleToggle")
-                    ),
-                    column(6,
+                                         label="prepend/remove Output Preamble"),
                            checkboxInput(inputId="prependInputPreambleToggle",
                                          value=FALSE,
-                                         label="prependInputPreambleToggle")
+                                         label="prepend/remove Input Preamble")
                     )
                   )
                 )
