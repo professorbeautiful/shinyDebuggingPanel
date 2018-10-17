@@ -19,9 +19,11 @@ makeDebuggingPanelOutput = function(
   if(is.null(session))
     thisSession <<- shiny::getDefaultReactiveDomain()
   else thisSession <<- session
+  rValuesDebugging_R <<- reactiveValues(evalStringHistory=list())
+  rValuesDebugging_JS <<- reactiveValues(evalStringHistory=list())
+
   debugToolsExpression = expression(
     {
-      rValuesDebugging = reactiveValues()
       wasClicked =  function(button) {
         if(exists('input'))
           if(!is.null(button) ) {
@@ -39,14 +41,17 @@ makeDebuggingPanelOutput = function(
         if(wasClicked(input$evalButtonR)) {
           # cat('evaluatedOutputR\n')
           evalString = isolate(input$evalStringR)
+          isolate({
+            rValuesDebugging_R$evalStringHistory =
+              c(rValuesDebugging_R$evalStringHistory, evalString)
+          })
           capturedOutput =  capture.output(eval(parse(text=evalString)))
           HTML(paste(collapse='<br>', capturedOutput))
           #capturedOutput
           ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
           ## The following might be useful later for up-arrowing through past expressions.
-          #   if(is.null(rValuesDebugging$evalStringHistory))
-          #     rValuesDebugging$evalStringHistory = character(0)
-          #  rValuesDebugging$evalStringHistory = c(rValuesDebugging$evalStringHistory, evalString)
+          #if(is.null(rValuesDebugging_R$evalStringHistory))
+          #  rValuesDebugging_R$evalStringHistory = character(0)
         }
       })
 
@@ -54,6 +59,12 @@ makeDebuggingPanelOutput = function(
       # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
       inputPreambleJS <<- 'window.Shiny.shinyapp.$inputValues.'
       wrapperToGetKeys <<- function(x) 'Object.keys(' %&% x %&% ')'
+      observeEvent(input$idJSlineNum, {
+        if(input$idJSlineNum > 0 &
+           input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory))
+          updateTextAreaInput('evalStringJS',
+                              value = rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
+      })
       observerPreambleToggles = observe({
         input$prependInputPreambleToggle
         input$prependOutputPreambleToggle
@@ -72,9 +83,12 @@ makeDebuggingPanelOutput = function(
           }
           else ## Remove outputPreambleJS
             evalString = gsub(outputPreambleJS, '', evalString, fixed=TRUE)
-          isolate( { rValuesDebugging$evalStringJS = evalString } )
+
+          isolate( { rValuesDebugging_JS$evalStringJS = evalString } )
           catn('Responding to preamble toggles, evalString=', evalString)
-          updateTextInput(thisSession, 'evalStringJS', label='', value=rValuesDebugging$evalStringJS)
+          updateTextInput(thisSession, 'evalStringJS',
+                          label='',
+                          value=rValuesDebugging_JS$evalStringJS)
           # You need to specify the label arg too. The default, NULL, doesn't cut it.
         })
       })
@@ -87,11 +101,20 @@ makeDebuggingPanelOutput = function(
       output$JSevaluation = renderUI({
         if(wasClicked(input$evalButtonJS) ) {
           evalString = gsub('"', "'", isolate(input$evalStringJS)) # replace all DQ with SQ.
+          isolate({
+            rValuesDebugging_JS$evalStringHistory =
+              c(rValuesDebugging_JS$evalStringHistory, evalString);
+            print(length(rValuesDebugging_JS$evalStringHistory))
+          })
           div(list(tags$script(
             paste0(
               'alert(eval("', evalString, '"))'       # THIS WORKS!
             )
           )))
+          # if(is.null(rValuesDebugging_JS$evalStringHistory))
+          #   rValuesDebugging_JS$evalStringHistory = character(0)
+          # rValuesDebugging_JS$evalStringHistory = c(rValuesDebugging_JS$evalStringHistory, evalString)
+
         }
         # TRY THIS SOME TIME, to avoid creating an alert window for the JS output:
         #document.getElementById("demo").innerHTML = ... ;
