@@ -6,7 +6,15 @@ shinyUI(
     div(h1("A simple example"),
         hr(),
         shinyDebuggingPanel::withDebuggingPanel(),
-        h4('To use this facility in your app:'),
+        h4('To use this facility:'),
+        pre(
+"
+Select R or JS for your language, type an expression in the box,
+and click the 'evaluate' button.
+Use the counter to retrieve previous commands.
+"
+        ),
+        h4('To add this facility to your app:'),
         pre(
 "
 - install the package with
