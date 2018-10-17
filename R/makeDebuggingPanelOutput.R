@@ -54,16 +54,30 @@ makeDebuggingPanelOutput = function(
           #  rValuesDebugging_R$evalStringHistory = character(0)
         }
       })
-
+      observeEvent(input$idrValuesDebugging_JSRlineNum, {
+        print(input$idJSlineNum)
+        if((input$idJSlineNum > 0) &
+           input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory)) {
+          print(rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
+          updateTextAreaInput('evalStringJS',
+                              value = rValuesDebugging_JS$evalStringHistory
+                              [[input$idJSlineNum]])
+        }
+      })
       outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
       # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
       inputPreambleJS <<- 'window.Shiny.shinyapp.$inputValues.'
       wrapperToGetKeys <<- function(x) 'Object.keys(' %&% x %&% ')'
+
       observeEvent(input$idJSlineNum, {
-        if(input$idJSlineNum > 0 &
-           input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory))
-          updateTextAreaInput('evalStringJS',
-                              value = rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
+        print(input$idJSlineNum)
+        if((input$idJSlineNum > 0) &
+           input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory)) {
+          print(rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
+          updateTextAreaInput(session = thisSession, inputId = 'evalStringJS',
+                              value = rValuesDebugging_JS$evalStringHistory
+                              [[input$idJSlineNum]])
+        }
       })
       observerPreambleToggles = observe({
         input$prependInputPreambleToggle
@@ -104,7 +118,10 @@ makeDebuggingPanelOutput = function(
           isolate({
             rValuesDebugging_JS$evalStringHistory =
               c(rValuesDebugging_JS$evalStringHistory, evalString);
-            print(length(rValuesDebugging_JS$evalStringHistory))
+            print(length(rValuesDebugging_JS$evalStringHistory));
+            updateNumericInput(thisSession,
+                               'idJSnum',
+                               value=input$idJSnum + 1)
           })
           div(list(tags$script(
             paste0(
@@ -129,7 +146,16 @@ makeDebuggingPanelOutput = function(
               ifelse(input$traceCheckbox, 'on', 'off'))
       })   #### OK this works now.
 
-
+      observeEvent(input$idRlineNum, {
+        print(input$idRlineNum)
+        if((input$idRlineNum > 0) &
+           input$idRlineNum <= length(rValuesDebugging_R$evalStringHistory)) {
+          print(rValuesDebugging_R$evalStringHistory[[input$idRlineNum]])
+          updateTextAreaInput(session = thisSession, inputId = 'evalStringR',
+                              value = rValuesDebugging_R$evalStringHistory
+                              [[input$idRlineNum]])
+        }
+      })
       output$debugTools = renderUI({
         shiny::conditionalPanel(
           condition=theShowDebuggerCondition,
@@ -162,7 +188,9 @@ makeDebuggingPanelOutput = function(
                   fluidRow(
                     column(2, offset = 1,
                            actionButton("evalButtonR",
-                                        HTML("<font color='red'> evaluate R</font>"))
+                                        HTML("<font color='red'> evaluate R</font>")),
+                           numericInput('idRlineNum', label = '',
+                                        value = 1, min=1)
                     ),
                     column(9,
                            tagAppendAttributes(
@@ -185,9 +213,10 @@ makeDebuggingPanelOutput = function(
                     column(2,
                            actionButton("evalButtonJS",
                                         HTML("<font color='red'> evaluate JS</font>")),
-                           numericInput('idJSlineNum', label = '', value = 1)
+                           numericInput('idJSlineNum', label = '',
+                                        value = 1, min=1)
                            ),
-                    column(10, tagAppendAttributes(
+                    column(9, tagAppendAttributes(
                       style="width:550px; height:150px;",
                       tags$textarea(id = "evalStringJS",
                                     value="") )
