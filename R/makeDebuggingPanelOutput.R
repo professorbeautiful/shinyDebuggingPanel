@@ -115,11 +115,17 @@ makeDebuggingPanelOutput = function(
                 "outputPreambleJS = '", outputPreambleJS, "';")))
               ,
               fluidRow( style="color: blue",
-                        column(6, checkboxInput(
+                        column(4, checkboxInput(
                           inputId='debugToolsCheckbox', value=toolsInitialState,
-                          label=em(strong("Debug a shiny apps: evaluate R and JS")))
+                          label=em(strong("Show box of code to evaluate")))
                         ),
-                        column(6, checkboxInput(
+                        column(4, radioButtons('id_languageChoice', '',
+                                               choices=c('R', 'JS'),
+                                               inline=TRUE)
+                               # inputId='debugToolsCheckbox_JS', value=toolsInitialState,
+                               # label=em(strong("Debug a shiny apps: evaluate R and JS")))
+                        ),
+                        column(4, checkboxInput(
                           inputId="traceCheckbox",
                           value=FALSE,
                           label=em(strong(textOutput("shiny.trace.text")))
@@ -128,79 +134,65 @@ makeDebuggingPanelOutput = function(
               ),
               conditionalPanel(
                 'input.debugToolsCheckbox',
-                fluidRow(
-                  column(7, wellPanel(
-                    fluidRow(
-                      column(4,
-                             column(6,
-                                    HTML(rep("&nbsp;", 1)),
-                                    actionButton("evalButtonR",
-                                                 HTML("<font color='red'> evaluate R</font>"))
-                             ),
-                             column(3,
-                                    tagAppendAttributes(
-                                      style="color:red",
-                                      span(br(),
-                                           HTML("&nbsp;&nbsp;&nbsp;&rarr;"))
-                                    )
-                             )
-                      )
-                      ,
-                      column(6,
-                             tagAppendAttributes(
-                               #   style="",
-                               style="width:350px; height:150px;",
-                               tags$textarea(
-                                 id = "evalStringR", label="R code",
-                                 value=""))
-                      )#)
-                      ,
-                      tagAppendAttributes(width=800,
-                                          style='text-align:"right"; color:green',
-                                          bsModal(id = 'evaluateR_popup',
-                                                  title="Output of R command",
-                                                  trigger = "evalButtonR",
-                                                  size="large",
-                                                  uiOutput(outputId="evaluatedOutputR")))
-                    ))),
-                  column(5,
-                         wellPanel(fluidRow(
-                           column(3, tagAppendAttributes(
-                             style="display: flex; justify-content:flex-end;",
-                             actionButton("evalButtonJS",
-                                          HTML("<font color='red'> evaluate JS</font>")))
-                           )# Cool! Too bad it doesn't work.
-                           ,   column(2,
-                                      tagAppendAttributes(
-                                        style="color:red",
-                                        span(br(),
-                                             HTML("&nbsp;&nbsp;&nbsp;&rarr;"))
-                                      )
-                           )
-                           , column(7,
-                                    tags$textarea(id = "evalStringJS",
-                                                  value="") )
-                         )
-                         , br()
-                         , checkboxInput(inputId="prependOutputPreambleToggle",
+                conditionalPanel(
+                  'input.id_languageChoice==="R"',
+                  fluidRow(
+                    column(2, offset = 1,
+                           actionButton("evalButtonR",
+                                        HTML("<font color='red'> evaluate R</font>"))
+                    ),
+                    column(9,
+                           tagAppendAttributes(
+                             style="width:550px; height:150px;",
+                             tags$textarea(
+                               id = "evalStringR", label="R code",
+                               value="1234"))
+                    ),
+                    tagAppendAttributes(width=800,
+                                        style='text-align:"right"; color:green',
+                                        bsModal(id = 'evaluateR_popup',
+                                                title="Output of R command",
+                                                trigger = "evalButtonR",
+                                                size="large",
+                                                uiOutput(outputId="evaluatedOutputR")))
+                  )),
+                conditionalPanel(
+                  'input.id_languageChoice==="JS"',
+                  fluidRow(
+                    column(2,
+                           actionButton("evalButtonJS",
+                                        HTML("<font color='red'> evaluate JS</font>")),
+                           numericInput('idJSlineNum', label = '', value = 1)
+                           ),
+                    column(10, tagAppendAttributes(
+                      style="width:550px; height:150px;",
+                      tags$textarea(id = "evalStringJS",
+                                    value="") )
+                    )
+                  ),
+                  fluidRow(
+                    column(6,
+                           checkboxInput(inputId="prependOutputPreambleToggle",
                                          value=FALSE,
                                          label="prependOutputPreambleToggle")
-                         , checkboxInput(inputId="prependInputPreambleToggle",
+                    ),
+                    column(6,
+                           checkboxInput(inputId="prependInputPreambleToggle",
                                          value=FALSE,
                                          label="prependInputPreambleToggle")
-                         )
-                  ),
-                  #list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
-                  uiOutput(outputId='JSevaluation')
+                    )
+                  )
                 )
-              )
+              ),
+              #list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
+              uiOutput(outputId='JSevaluation')
           )
         )
       }) ### end callto renderUI
 
     })  ### end of call to expression()
-  parentFrameNumber = 1
-  #cat('parentFrameNumber = ', parentFrameNumber, '\n')
-  eval(debugToolsExpression, envir = parent.frame(parentFrameNumber))
-  #cat('debugToolsExpression eval done ', '\n')
+parentFrameNumber = 1
+#cat('parentFrameNumber = ', parentFrameNumber, '\n')
+eval(debugToolsExpression, envir = parent.frame(parentFrameNumber))
+#cat('debugToolsExpression eval done ', '\n')
 }
