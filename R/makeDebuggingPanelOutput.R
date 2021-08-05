@@ -141,17 +141,17 @@ makeDebuggingPanelOutput = function(
               ifelse(input$traceCheckbox, 'on', 'off'))
       })   #### OK this works now.
 
-      # observeEvent(input$idRlineNum, {
-      #   print(input$idRlineNum)
-      #   if(!is.na(input$idRlineNum) & (input$idRlineNum > 0) &
-      #      input$idRlineNum <= length(rValuesDebugging_R$evalStringHistory)) {
-      #     print(rValuesDebugging_R$evalStringHistory[[input$idRlineNum]])
-      #     updateTextAreaInput(label=' ', session = thisSession, inputId = 'evalStringR',
-      #                         value = rValuesDebugging_R$evalStringHistory
-      #                         [[input$idRlineNum]])
-      #   }
-      # })
-      #
+      observeEvent(input$idRlineNum, {
+        print(input$idRlineNum)
+        if(!is.na(input$idRlineNum) & (input$idRlineNum > 0) &
+           input$idRlineNum <= length(rValuesDebugging_R$evalStringHistory)) {
+          print(rValuesDebugging_R$evalStringHistory[[input$idRlineNum]])
+          updateTextAreaInput(label=' ', session = thisSession, inputId = 'evalStringR',
+                              value = rValuesDebugging_R$evalStringHistory
+                              [[input$idRlineNum]])
+        }
+      })
+
       output$debugTools =
         renderUI({
         shiny::conditionalPanel(
