@@ -36,21 +36,21 @@ makeDebuggingPanelOutput = function(
       }
       assign('%&%',  function (a, b) paste(a, b, sep = ''))
       catn = function(...) cat(..., '\n')
-#
-#       observeEvent(input$evalButtonR, {
-#         print("saw input$evalButtonR")
-#         evalString = isolate(input$evalStringR)
-#         rValuesDebugging_R$evalStringHistory =
-#           c(rValuesDebugging_R$evalStringHistory, evalString)
-#         cat("length evalStringHistory = ",
-#             length(rValuesDebugging_R$evalStringHistory),  '\n')
-#         rValuesDebugging_R$capturedOutput =
-#           capture.output(try(eval(parse(text=evalString))))
-#         updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
-#                            value = length(rValuesDebugging_R$evalStringHistory),
-#                            max = length(rValuesDebugging_R$evalStringHistory))
-#       })
-#
+
+      observeEvent(input$evalButtonR, {
+        print("saw input$evalButtonR")
+        evalString = isolate(input$evalStringR)
+        rValuesDebugging_R$evalStringHistory =
+          c(rValuesDebugging_R$evalStringHistory, evalString)
+        cat("length evalStringHistory = ",
+            length(rValuesDebugging_R$evalStringHistory),  '\n')
+        rValuesDebugging_R$capturedOutput =
+          capture.output(try(eval(parse(text=evalString))))
+        updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
+                           value = length(rValuesDebugging_R$evalStringHistory),
+                           max = length(rValuesDebugging_R$evalStringHistory))
+      })
+
       output$evaluatedOutputR = renderUI({
           HTML(paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
           #capturedOutput
