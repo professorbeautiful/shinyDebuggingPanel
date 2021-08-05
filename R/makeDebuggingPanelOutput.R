@@ -72,34 +72,34 @@ makeDebuggingPanelOutput = function(
                               [[input$idJSlineNum]])
         }
       })
-      # observerPreambleToggles = observe({
-      #   input$prependInputPreambleToggle
-      #   input$prependOutputPreambleToggle
-      #   try({
-      #     evalString = isolate(input$evalStringJS)
-      #     if(wasClicked(input$prependInputPreambleToggle)) {
-      #       if(substr(evalString, 1, nchar(inputPreambleJS)) != inputPreambleJS)
-      #         evalString = paste0(inputPreambleJS, evalString)
-      #     }
-      #     else ## Remove inputPreambleJS
-      #       evalString = gsub(inputPreambleJS, '', evalString, fixed=TRUE)
-      #
-      #     if(wasClicked(input$prependOutputPreambleToggle)) {
-      #       if(substr(evalString, 1, nchar(outputPreambleJS)) != outputPreambleJS)
-      #         evalString = paste0(outputPreambleJS, evalString)
-      #     }
-      #     else ## Remove outputPreambleJS
-      #       evalString = gsub(outputPreambleJS, '', evalString, fixed=TRUE)
-      #
-      #     isolate( { rValuesDebugging_JS$evalStringJS = evalString } )
-      #     catn('Responding to preamble toggles, evalString=', evalString)
-      #     updateTextInput(thisSession, 'evalStringJS',
-      #                     label=' ',
-      #                     value=rValuesDebugging_JS$evalStringJS)
-      #     # You need to specify the label arg too. The default, NULL, doesn't cut it.
-      #   })
-      # })
-      #
+      observerPreambleToggles = observe({
+        input$prependInputPreambleToggle
+        input$prependOutputPreambleToggle
+        try({
+          evalString = isolate(input$evalStringJS)
+          if(wasClicked(input$prependInputPreambleToggle)) {
+            if(substr(evalString, 1, nchar(inputPreambleJS)) != inputPreambleJS)
+              evalString = paste0(inputPreambleJS, evalString)
+          }
+          else ## Remove inputPreambleJS
+            evalString = gsub(inputPreambleJS, '', evalString, fixed=TRUE)
+
+          if(wasClicked(input$prependOutputPreambleToggle)) {
+            if(substr(evalString, 1, nchar(outputPreambleJS)) != outputPreambleJS)
+              evalString = paste0(outputPreambleJS, evalString)
+          }
+          else ## Remove outputPreambleJS
+            evalString = gsub(outputPreambleJS, '', evalString, fixed=TRUE)
+
+          isolate( { rValuesDebugging_JS$evalStringJS = evalString } )
+          catn('Responding to preamble toggles, evalString=', evalString)
+          updateTextInput(thisSession, 'evalStringJS',
+                          label=' ',
+                          value=rValuesDebugging_JS$evalStringJS)
+          # You need to specify the label arg too. The default, NULL, doesn't cut it.
+        })
+      })
+
       output$evaluatedOutputJS = renderText({
         shinyalert('JS output is in a popup alert window, if there was no error. Otherwise nothing happens')
       }
