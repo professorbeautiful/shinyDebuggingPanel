@@ -167,6 +167,7 @@ makeDebuggingPanelOutput = function(
                         ),
                         column(4, radioButtons('id_languageChoice', '',
                                                choices=c('R', 'JS'),
+                                               #selected = 'R',
                                                inline=TRUE, label='XYZ')
                                # inputId='debugToolsCheckbox_JS', value=toolsInitialState,
                                # label=em(strong("Debug a shiny apps: evaluate R and JS")))
@@ -179,60 +180,60 @@ makeDebuggingPanelOutput = function(
                         )
               )
               ,
-              # conditionalPanel(
-              #   'input.debugToolsCheckbox',
-              #   conditionalPanel(
-              #     'input.id_languageChoice==="R"',
-              #     fluidRow(
-              #       column(2, offset = 1,
-              #              actionButton(
-              #                "evalButtonR",
-              #                HTML(
-              #                  "<font color='dark red' style='font-weight:bold'> evaluate R</font>")),
-              #              numericInput('idRlineNum',  label = "command\nhistory",
-              #                           width = '100px',
-              #                           value = 1, min=1)
-              #       ),
-              #       column(9,
-              #              tagAppendAttributes(
-              #                style="width:550px; height:150px;",
-              #                tags$textarea(
-              #                  id = "evalStringR", label="R code",
-              #                  value="1234"))
-              #       ),
-              #       tagAppendAttributes(width=800,
-              #                           style='text-align:"right"; color:green',
-              #                           bsModal(id = 'evaluateR_popup',
-              #                                   title="Output of R command",
-              #                                   trigger = "evalButtonR",
-              #                                   size="large",
-              #                                   uiOutput(outputId="evaluatedOutputR")))
-              #     )),
-              #   conditionalPanel(
-              #     'input.id_languageChoice==="JS"',
-              #     fluidRow(
-              #       column(2, offset = 1,
-              #              actionButton( inputId = "evalButtonJS",
-              #               label = HTML(
-              #                  "<font color='dark red' style='font-weight:bold'> evaluate JS</font>")),
-              #              numericInput('idJSlineNum', label = "command\nhistory",
-              #                           width = '100px', value = 1, min=1)
-              #              ),
-              #       column(9, tagAppendAttributes(
-              #         style="width:550px; height:150px;",
-              #         tags$textarea(id = "evalStringJS",
-              #                       value="") ),
-              #              checkboxInput(inputId="prependOutputPreambleToggle",
-              #                            value=FALSE,
-              #                            label="prepend/remove Output Preamble"),
-              #              checkboxInput(inputId="prependInputPreambleToggle",
-              #                            value=FALSE,
-              #                            label="prepend/remove Input Preamble")
-              #       )
-              #     )
-              #   )
-              # ),
-              #list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
+              conditionalPanel(
+                'input.debugToolsCheckbox',
+                conditionalPanel(
+                  'input.id_languageChoice==="R"',
+                  fluidRow(
+                    column(2, offset = 1,
+                           actionButton(
+                             "evalButtonR",
+                             HTML(
+                               "<font color='dark red' style='font-weight:bold'> evaluate R</font>")),
+                           numericInput('idRlineNum',  label = "command\nhistory",
+                                        width = '100px',
+                                        value = 1, min=1)
+                    ),
+                    column(9,
+                           tagAppendAttributes(
+                             style="width:550px; height:150px;",
+                             tags$textarea(
+                               id = "evalStringR", label="R code",
+                               value="1234"))
+                    ),
+                    tagAppendAttributes(width=800,
+                                        style='text-align:"right"; color:green',
+                                        bsModal(id = 'evaluateR_popup',
+                                                title="Output of R command",
+                                                trigger = "evalButtonR",
+                                                size="large",
+                                                uiOutput(outputId="evaluatedOutputR")))
+                  )),
+                conditionalPanel(
+                  'input.id_languageChoice==="JS"',
+                  fluidRow(
+                    column(2, offset = 1,
+                           actionButton( inputId = "evalButtonJS",
+                            label = HTML(
+                               "<font color='dark red' style='font-weight:bold'> evaluate JS</font>")),
+                           numericInput('idJSlineNum', label = "command\nhistory",
+                                        width = '100px', value = 1, min=1)
+                           ),
+                    column(9, tagAppendAttributes(
+                      style="width:550px; height:150px;",
+                      tags$textarea(id = "evalStringJS",
+                                    value="") ),
+                           checkboxInput(inputId="prependOutputPreambleToggle",
+                                         value=FALSE,
+                                         label="prepend/remove Output Preamble"),
+                           checkboxInput(inputId="prependInputPreambleToggle",
+                                         value=FALSE,
+                                         label="prepend/remove Input Preamble")
+                    )
+                  )
+                )
+              ),
+              list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
               uiOutput(outputId='JSevaluation')
           )
         )
