@@ -11,17 +11,37 @@
 makeDebuggingPanelOutput = function(
   session=NULL,
   toolsInitialState=FALSE,
-  condition='true') {
+  condition='true',
+  includePreambleFeature = FALSE) {
   #thisSession <<- shiny::getDefaultReactiveDomain()
   # either is OK, but the ifelse fails, both with is.null() and  missing().
   toolsInitialState <<- toolsInitialState
   theShowDebuggerCondition <<- condition
+  includePreambleFeature <<- includePreambleFeature
   if(is.null(session))
     thisSession <<- shiny::getDefaultReactiveDomain()
   else thisSession <<- session
   rValuesDebugging_R <<- reactiveValues(evalStringHistory=list(),
                                         capturedOutput="")
   rValuesDebugging_JS <<- reactiveValues(evalStringHistory=list())
+
+
+  if(includePreambleFeature) {
+    preamble1checkbox <<-
+      checkboxInput(
+        inputId="prependOutputPreambleToggle",
+        value=FALSE,
+        label="prepend/remove Output Preamble")
+    preamble2checkbox <<-
+      checkboxInput(inputId="prependInputPreambleToggle",
+                  value=FALSE,
+                  label="prepend/remove Input Preamble")
+  } else {
+    preamble1checkbox <<- " "
+    preamble2checkbox <<- " "
+  }
+
+
 
   debugToolsExpression = expression(
     {
@@ -72,32 +92,39 @@ makeDebuggingPanelOutput = function(
                               [[input$idJSlineNum]])
         }
       })
-      observerPreambleToggles = observe({
-        input$prependInputPreambleToggle
-        input$prependOutputPreambleToggle
-        try({
-          evalString = isolate(input$evalStringJS)
-          if(wasClicked(input$prependInputPreambleToggle)) {
-            if(substr(evalString, 1, nchar(inputPreambleJS)) != inputPreambleJS)
-              evalString = paste0(inputPreambleJS, evalString)
-          }
-          else ## Remove inputPreambleJS
-            evalString = gsub(inputPreambleJS, '', evalString, fixed=TRUE)
 
-          if(wasClicked(input$prependOutputPreambleToggle)) {
-            if(substr(evalString, 1, nchar(outputPreambleJS)) != outputPreambleJS)
-              evalString = paste0(outputPreambleJS, evalString)
-          }
-          else ## Remove outputPreambleJS
-            evalString = gsub(outputPreambleJS, '', evalString, fixed=TRUE)
+      if(includePreambleFeature)
+        observerPreambleToggles = observe({
+          input$prependInputPreambleToggle
+          input$prependOutputPreambleToggle
+          try({
+            evalString = isolate(input$evalStringJS)
+            if(wasClicked(input$prependInputPreambleToggle)) {
+              if(substr(evalString, 1, nchar(inputPreambleJS)) != inputPreambleJS)
+                evalString = paste0(inputPreambleJS, evalString)
+            }
+            else ## Remove inputPreambleJS
+              evalString = gsub(inputPreambleJS, '', evalString, fixed=TRUE)
 
-          isolate( { rValuesDebugging_JS$evalStringJS = evalString } )
-          catn('Responding to preamble toggles, evalString=', evalString)
-          updateTextInput(thisSession, 'evalStringJS',
-                          label=' ',
-                          value=rValuesDebugging_JS$evalStringJS)
-          # You need to specify the label arg too. The default, NULL, doesn't cut it.
-        })
+            if(wasClicked(input$prependOutputPreambleToggle)) {
+              if(substr(evalString, 1, nchar(outputPreambleJS)) != outputPreambleJS)
+                evalString = paste0(outputPreambleJS, evalString)
+            }
+            else ## Remove outputPreambleJS
+              evalString = gsub(outputPreambleJS, '', evalString, fixed=TRUE)
+
+            isolate( { rValuesDebugging_JS$evalStringJS = evalString } )
+            # This 'isolate' is not the problem.
+            catn('Responding to preamble toggles, evalString=', evalString)
+            updateTextAreaInput(label=' ', session = thisSession,
+                                inputId = 'evalStringJS',
+                                value=evalString)
+            # This updateTextInput works.
+            # This statement works without error when run from the evalStringR box!
+            # It also works here!
+            # But it kicks off the labelNode error EVERY TIME one of
+            # the checkboxes is clicked, whether on or off.
+          })
       })
 
       output$evaluatedOutputJS = renderText({
@@ -186,14 +213,11 @@ makeDebuggingPanelOutput = function(
         ),
         column(9, tagAppendAttributes(
           style="width:550px; height:150px;",
-          tags$textarea(id = "evalStringJS",
-                        value="") ),
-          checkboxInput(inputId="prependOutputPreambleToggle",
-                        value=FALSE,
-                        label="prepend/remove Output Preamble"),
-          checkboxInput(inputId="prependInputPreambleToggle",
-                        value=FALSE,
-                        label="prepend/remove Input Preamble")
+            tags$textarea(id = "evalStringJS",
+                        value="") )
+          ,
+          preamble1checkbox,
+          preamble2checkbox
         )
       )
       fluidRow_debugToolsCheckbox = fluidRow( style="color: blue",
@@ -231,9 +255,10 @@ makeDebuggingPanelOutput = function(
                 conditionalPanel(
                   'input.id_languageChoice=="R"',
                   fluidRow_R)
-                # conditionalPanel(
-                #   'input.id_languageChoice=="JS"',
-                #   fluidRow_JS)
+                ,
+                conditionalPanel(
+                  'input.id_languageChoice=="JS"',
+                  fluidRow_JS)
               ),
               list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
               uiOutput(outputId='JSevaluation')
