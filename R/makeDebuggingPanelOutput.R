@@ -228,7 +228,7 @@ makeDebuggingPanelOutput = function(
               ,
               conditionalPanel(
                 'input.debugToolsCheckbox',
-                ' ',fluidRow_R, fluidRow_JS
+                ' ',fluidRow_R
                 # conditionalPanel(
                 #   'input.id_languageChoice=="R"',
                 #   fluidRow_R),
