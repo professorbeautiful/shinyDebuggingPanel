@@ -12,10 +12,12 @@ makeDebuggingPanelOutput = function(
   session=NULL,
   toolsInitialState=FALSE,
   condition='true',
+  initialTraceValue=FALSE,
   includePreambleFeature = FALSE) {
   #thisSession <<- shiny::getDefaultReactiveDomain()
   # either is OK, but the ifelse fails, both with is.null() and  missing().
   toolsInitialState <<- toolsInitialState
+  initialTraceValue <<-  initialTraceValue
   theShowDebuggerCondition <<- condition
   includePreambleFeature <<- includePreambleFeature
   if(is.null(session))
@@ -227,14 +229,14 @@ makeDebuggingPanelOutput = function(
                                               ),
                                               column(4, radioButtons('id_languageChoice', '',
                                                                      choices=c('R', 'JS'),
-                                                                     #selected = 'R',
+                                                                     selected = 'R',
                                                                      inline=TRUE, label='language')
                                                      # inputId='debugToolsCheckbox_JS', value=toolsInitialState,
                                                      # label=em(strong("Debug a shiny apps: evaluate R and JS")))
                                               ),
                                               column(4, checkboxInput(
                                                 inputId="traceCheckbox",
-                                                value=TRUE,
+                                                value=initialTraceValue,
                                                 label=em(strong(textOutput("shiny.trace.text")))
                                               )
                                               )
