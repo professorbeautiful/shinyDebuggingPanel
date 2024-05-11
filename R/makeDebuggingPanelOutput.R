@@ -229,7 +229,7 @@ makeDebuggingPanelOutput = function(
                                               ),
                                               column(4, radioButtons('id_languageChoice', '',
                                                                      choices=c('R', 'JS'),
-                                                                     selected = 'R',
+                                                                     #selected = 'R',
                                                                      inline=TRUE, label='language')
                                                      # inputId='debugToolsCheckbox_JS', value=toolsInitialState,
                                                      # label=em(strong("Debug a shiny apps: evaluate R and JS")))
