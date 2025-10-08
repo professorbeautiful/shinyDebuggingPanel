@@ -1,7 +1,7 @@
 Package: shinyDebuggingPanel
 Type: Package
 Title: A Debugging Panel for Shiny Apps
-Version: 0.5
+Version: 0.5.1
 Date: 2025-10-08
 Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
