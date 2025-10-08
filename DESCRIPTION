@@ -1,15 +1,15 @@
 Package: shinyDebuggingPanel
 Type: Package
 Title: A Debugging Panel for Shiny Apps
-Version: 0.4
-Date: 2022-06-25
+Version: 0.5
+Date: 2025-10-08
 Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
 Description: Provides support for including a handy panel in your shiny app
     making it easier to debug it.
 License: file LICENSE
 Depends:
-    R (>= 2.10.1),
     shiny,
-    shinyBS
+    shinyBS,
+    shinyalert
 RoxygenNote: 7.3.3
