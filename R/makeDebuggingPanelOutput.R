@@ -85,11 +85,11 @@ makeDebuggingPanelOutput = function(
                            max = length(rValuesDebugging_R$evalStringHistory))
       })
 
-      output$evaluatedOutputR = renderUI({
-          HTML(paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
-          #capturedOutput
-          ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
-      })
+      # output$evaluatedOutputR = renderUI({
+      #     HTML(paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
+      #     #capturedOutput
+      #     ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
+      # })
 
       outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
       # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
@@ -209,13 +209,13 @@ makeDebuggingPanelOutput = function(
                    id = "evalStringR", label="R code",
                    value="1234"))
         ),
-        tagAppendAttributes(width=800,
-                            style='text-align:"right"; color:green',
-                            bsModal(id = 'evaluateR_popup',
-                                    title="Output of R command",
-                                    trigger = "evalButtonR",
-                                    size="large",
-                                    uiOutput(outputId="evaluatedOutputR")))
+      #   tagAppendAttributes(width=800,
+      #                       style='text-align:"right"; color:green',
+      #                       bsModal(id = 'evaluateR_popup',
+      #                               title="Output of R command",
+      #                               trigger = "evalButtonR",
+      #                               size="large",
+      #                               uiOutput(outputId="evaluatedOutputR")))
       )
       fluidRow_JS =  fluidRow(
         column(2, offset = 1,
