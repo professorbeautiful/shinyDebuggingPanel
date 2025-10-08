@@ -67,70 +67,29 @@ makeDebuggingPanelOutput = function(
         observe({
           evalString = isolate(input$evalStringR)
           print(paste('evalString', evalString))
-          # rValuesDebugging_R$evalStringHistory =
-          #   c(rValuesDebugging_R$evalStringHistory, evalString)
-          # cat("length evalStringHistory = ",
-          #     length(rValuesDebugging_R$evalStringHistory),  '\n')
+          rValuesDebugging_R$evalStringHistory =
+            c(rValuesDebugging_R$evalStringHistory, evalString)
+          cat("length evalStringHistory = ",
+              length(rValuesDebugging_R$evalStringHistory),  '\n')
           rValuesDebugging_R$capturedOutput =
             capture.output(try(eval(parse(text=evalString))))
           print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
-          # alertText = paste(collapse=' ', div(style='text-align:left; width=800;  text-color:red',
-          #                 paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
-          # )
-          #alertText = rValuesDebugging_R$capturedOutput
           showModal(
           modalDialog(
               title = evalString,
               easy_close = TRUE,  #doesn't work. you need the cancel button.
-            #  (alertText),
             div(style='text-align:left; color:red',
                 HTML(paste(collapse='<br/>',     # note the '/'.
                       rValuesDebugging_R$capturedOutput))),
-              #actionButton('alertText', HTML(alertText)),
               footer=modalButton('cancel')
             )
           )
-          # updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
-          #                              value = length(rValuesDebugging_R$evalStringHistory),
-          #                              max = length(rValuesDebugging_R$evalStringHistory))
-
+          updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
+                                       value = length(rValuesDebugging_R$evalStringHistory),
+                                       max = length(rValuesDebugging_R$evalStringHistory))
         }),
         input$evalButtonR
       )
-#      observeEvent(input$evalButtonR, {
- #       print("saw input$evalButtonR")
-        # evalString = isolate(input$evalStringR)
-        # rValuesDebugging_R$evalStringHistory =
-        #   c(rValuesDebugging_R$evalStringHistory, evalString)
-        # cat("length evalStringHistory = ",
-        #     length(rValuesDebugging_R$evalStringHistory),  '\n')
-        # rValuesDebugging_R$capturedOutput =
-        #   capture.output(try(eval(parse(text=evalString))))
-        # alertText = div(style='text-align:left; width=800',
-        #                 rValuesDebugging_R$capturedOutput
-        # )
-        # alertText = rValuesDebugging_R$capturedOutput
-        # print(paste('length(alertText)', length(alertText)))
-        # print(paste('str(alertText)', str(alertText)))
-        # print(alertText)
-        # shinyalert::shinyalert(title=evalString, #type = 'info',
-        #                        html = TRUE,
-        #                        #showCancelButton = TRUE,
-        #                        closeOnEsc = TRUE,
-        #                        closeOnClickOutside = TRUE,
-        #                        showConfirmButton = TRUE,
-        #                        text=as.vector(alertText)
-        # )
-        # updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
-        #                    value = length(rValuesDebugging_R$evalStringHistory),
-        #                    max = length(rValuesDebugging_R$evalStringHistory))
-
-
-      # output$evaluatedOutputR = renderUI({
-      #     HTML(paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
-      #     #capturedOutput
-      #     ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
-      # })
 
       outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
       # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
