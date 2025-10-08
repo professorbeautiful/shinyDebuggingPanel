@@ -11,6 +11,8 @@ in your ui.R.
 
 help('makeDebuggingPanelOutput', package='shinyDebuggingPanel')
 
+The preamble feature for javascript is not that helpful.
+
 2025-10-08
 Big changes, because damn, bsModal no longer showing the output,
 and shinyalert was full of problems too, like not being able to close the window.

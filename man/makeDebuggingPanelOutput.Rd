@@ -9,7 +9,7 @@ makeDebuggingPanelOutput(
   toolsInitialState = FALSE,
   condition = "true",
   initialTraceValue = FALSE,
-  includePreambleFeature = FALSE
+  includePreambleFeature = TRUE
 )
 }
 \arguments{
