@@ -72,13 +72,20 @@ makeDebuggingPanelOutput = function(
             length(rValuesDebugging_R$evalStringHistory),  '\n')
         rValuesDebugging_R$capturedOutput =
           capture.output(try(eval(parse(text=evalString))))
-        shinyalert::shinyalert(title='shinyalert', type = 'info',
+        alertText = div(style='text-align:left; width=800',
+                        rValuesDebugging_R$capturedOutput
+        )
+        alertText = rValuesDebugging_R$capturedOutput
+        print(paste('length(alertText)', length(alertText)))
+        print(paste('str(alertText)', str(alertText)))
+        print(alertText)
+        shinyalert::shinyalert(title=evalString, #type = 'info',
+                               html = TRUE,
                                #showCancelButton = TRUE,
                                closeOnEsc = TRUE,
                                closeOnClickOutside = TRUE,
                                showConfirmButton = TRUE,
-                               text=
-                                 paste(collapse='<br>', rValuesDebugging_R$capturedOutput)
+                               text=as.vector(alertText)
         )
         updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
                            value = length(rValuesDebugging_R$evalStringHistory),
@@ -239,9 +246,9 @@ makeDebuggingPanelOutput = function(
                                                 inputId='debugToolsCheckbox', value=toolsInitialState,
                                                 label=em(strong("Show box of code to evaluate")))
                                               ),
-                                              column(4, radioButtons('id_languageChoice', '',
+                                              column(4, radioButtons('id_languageChoice',
                                                                      choices=c('R', 'JS'),
-                                                                     #selected = 'R',
+                                                                     selected = 'R',
                                                                      inline=TRUE, label='language')
                                                      # inputId='debugToolsCheckbox_JS', value=toolsInitialState,
                                                      # label=em(strong("Debug a shiny apps: evaluate R and JS")))
