@@ -136,8 +136,8 @@ makeDebuggingPanelOutput = function(
             # This updateTextInput works.
             # This statement works without error when run from the evalStringR box!
             # It also works here!
-            # But it kicks off the labelNode error EVERY TIME one of
-            # the checkboxes is clicked, whether on or off.
+            # But does it kick off the labelNode error when one of
+            # the checkboxes is clicked?
           })
       })
 
