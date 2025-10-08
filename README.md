@@ -13,7 +13,7 @@ help('makeDebuggingPanelOutput', package='shinyDebuggingPanel')
 
 2025-10-08
 Big changes, because damn, bsModal no longer showing the output,
-and shinyalert was full of problems too, like not being about to close the window.
+and shinyalert was full of problems too, like not being able to close the window.
 
 So, now using showModal(modalDialog(...)).
 That allows HTML, and the cancel button works.
