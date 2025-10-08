@@ -15,9 +15,9 @@ makeDebuggingPanelOutput = function(
   initialTraceValue=FALSE,
   includePreambleFeature = FALSE) {
 
-  if( ! require('shinyalert')) {
-    devtools::install_github('daattali/shinyalert', quietly=TRUE, warn.conflicts=FALSE)
-  }
+  # if( ! require('shinyalert')) {
+  #   devtools::install_github('daattali/shinyalert', quietly=TRUE, warn.conflicts=FALSE)
+  # }
   #thisSession <<- shiny::getDefaultReactiveDomain()
   # either is OK, but the ifelse fails, both with is.null() and  missing().
   toolsInitialState <<- toolsInitialState
@@ -63,34 +63,67 @@ makeDebuggingPanelOutput = function(
       assign('%&%',  function (a, b) paste(a, b, sep = ''))
       catn = function(...) cat(..., '\n')
 
-      observeEvent(input$evalButtonR, {
-        print("saw input$evalButtonR")
-        evalString = isolate(input$evalStringR)
-        rValuesDebugging_R$evalStringHistory =
-          c(rValuesDebugging_R$evalStringHistory, evalString)
-        cat("length evalStringHistory = ",
-            length(rValuesDebugging_R$evalStringHistory),  '\n')
-        rValuesDebugging_R$capturedOutput =
-          capture.output(try(eval(parse(text=evalString))))
-        alertText = div(style='text-align:left; width=800',
-                        rValuesDebugging_R$capturedOutput
-        )
-        alertText = rValuesDebugging_R$capturedOutput
-        print(paste('length(alertText)', length(alertText)))
-        print(paste('str(alertText)', str(alertText)))
-        print(alertText)
-        shinyalert::shinyalert(title=evalString, #type = 'info',
-                               html = TRUE,
-                               #showCancelButton = TRUE,
-                               closeOnEsc = TRUE,
-                               closeOnClickOutside = TRUE,
-                               showConfirmButton = TRUE,
-                               text=as.vector(alertText)
-        )
-        updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
-                           value = length(rValuesDebugging_R$evalStringHistory),
-                           max = length(rValuesDebugging_R$evalStringHistory))
-      })
+      bindEvent(
+        observe({
+          evalString = isolate(input$evalStringR)
+          print(paste('evalString', evalString))
+          # rValuesDebugging_R$evalStringHistory =
+          #   c(rValuesDebugging_R$evalStringHistory, evalString)
+          # cat("length evalStringHistory = ",
+          #     length(rValuesDebugging_R$evalStringHistory),  '\n')
+          rValuesDebugging_R$capturedOutput =
+            capture.output(try(eval(parse(text=evalString))))
+          print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
+          alertText = div(style='text-align:left; width=800',
+                          rValuesDebugging_R$capturedOutput
+          )
+          alertText = rValuesDebugging_R$capturedOutput
+          print(paste('length(alertText)', length(alertText)))
+          print(paste('str(alertText)', str(alertText)))
+          print(alertText)
+
+          showModal(
+            modalDialog(
+              title = "I hope so",
+              easy_close = TRUE,
+              alertText
+            )
+          )
+          # updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
+          #                              value = length(rValuesDebugging_R$evalStringHistory),
+          #                              max = length(rValuesDebugging_R$evalStringHistory))
+
+        }),
+        input$evalButtonR
+      )
+#      observeEvent(input$evalButtonR, {
+ #       print("saw input$evalButtonR")
+        # evalString = isolate(input$evalStringR)
+        # rValuesDebugging_R$evalStringHistory =
+        #   c(rValuesDebugging_R$evalStringHistory, evalString)
+        # cat("length evalStringHistory = ",
+        #     length(rValuesDebugging_R$evalStringHistory),  '\n')
+        # rValuesDebugging_R$capturedOutput =
+        #   capture.output(try(eval(parse(text=evalString))))
+        # alertText = div(style='text-align:left; width=800',
+        #                 rValuesDebugging_R$capturedOutput
+        # )
+        # alertText = rValuesDebugging_R$capturedOutput
+        # print(paste('length(alertText)', length(alertText)))
+        # print(paste('str(alertText)', str(alertText)))
+        # print(alertText)
+        # shinyalert::shinyalert(title=evalString, #type = 'info',
+        #                        html = TRUE,
+        #                        #showCancelButton = TRUE,
+        #                        closeOnEsc = TRUE,
+        #                        closeOnClickOutside = TRUE,
+        #                        showConfirmButton = TRUE,
+        #                        text=as.vector(alertText)
+        # )
+        # updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
+        #                    value = length(rValuesDebugging_R$evalStringHistory),
+        #                    max = length(rValuesDebugging_R$evalStringHistory))
+
 
       # output$evaluatedOutputR = renderUI({
       #     HTML(paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
