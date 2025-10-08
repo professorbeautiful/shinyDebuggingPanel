@@ -74,20 +74,19 @@ makeDebuggingPanelOutput = function(
           rValuesDebugging_R$capturedOutput =
             capture.output(try(eval(parse(text=evalString))))
           print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
-          alertText = paste(collapse=' ', div(style='text-align:left; width=800;  text-color:red',
-                          paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
-          )
+          # alertText = paste(collapse=' ', div(style='text-align:left; width=800;  text-color:red',
+          #                 paste(collapse='<br>', rValuesDebugging_R$capturedOutput))
+          # )
           #alertText = rValuesDebugging_R$capturedOutput
-          print(paste('length(alertText)', length(alertText)))
-          print(paste('str(alertText)', str(alertText)))
-          print(alertText)
-
           showModal(
-            modalDialog(
+          modalDialog(
               title = "I hope so SO MUCH",
               easy_close = TRUE,  #doesn't work. you need the cancel button.
-              (alertText),
-              actionButton('alertText'),
+            #  (alertText),
+            div(style='text-align:left; color:red',
+                HTML(paste(collapse='<br/>',     # note the '/'.
+                      rValuesDebugging_R$capturedOutput))),
+              #actionButton('alertText', HTML(alertText)),
               footer=modalButton('cancel')
             )
           )
