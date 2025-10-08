@@ -14,6 +14,10 @@ makeDebuggingPanelOutput = function(
   condition='true',
   initialTraceValue=FALSE,
   includePreambleFeature = FALSE) {
+
+  if( ! require('shinyalert')) {
+    devtools::install_github('daattali/shinyalert', quietly=TRUE, warn.conflicts=FALSE)
+  }
   #thisSession <<- shiny::getDefaultReactiveDomain()
   # either is OK, but the ifelse fails, both with is.null() and  missing().
   toolsInitialState <<- toolsInitialState
@@ -68,6 +72,14 @@ makeDebuggingPanelOutput = function(
             length(rValuesDebugging_R$evalStringHistory),  '\n')
         rValuesDebugging_R$capturedOutput =
           capture.output(try(eval(parse(text=evalString))))
+        shinyalert::shinyalert(title='shinyalert', type = 'info',
+                               #showCancelButton = TRUE,
+                               closeOnEsc = TRUE,
+                               closeOnClickOutside = TRUE,
+                               showConfirmButton = TRUE,
+                               text=
+                                 paste(collapse='<br>', rValuesDebugging_R$capturedOutput)
+        )
         updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
                            value = length(rValuesDebugging_R$evalStringHistory),
                            max = length(rValuesDebugging_R$evalStringHistory))
