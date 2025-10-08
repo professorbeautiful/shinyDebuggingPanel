@@ -4,7 +4,13 @@
 \alias{makeDebuggingPanelOutput}
 \title{makeDebuggingPanelOutput}
 \usage{
-makeDebuggingPanelOutput(session = NULL)
+makeDebuggingPanelOutput(
+  session = NULL,
+  toolsInitialState = FALSE,
+  condition = "true",
+  initialTraceValue = FALSE,
+  includePreambleFeature = FALSE
+)
 }
 \arguments{
 \item{session}{The shiny session; default is  shiny::getDefaultReactiveDomain()s}
@@ -15,4 +21,3 @@ Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) inside your call to
 \details{
 Make sure your server function has the third argument:  function(input, output, session)
 }
-

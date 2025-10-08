@@ -12,4 +12,4 @@ Depends:
     R (>= 2.10.1),
     shiny,
     shinyBS
-RoxygenNote: 5.0.1
+RoxygenNote: 7.3.3

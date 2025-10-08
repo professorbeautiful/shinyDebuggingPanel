@@ -9,4 +9,3 @@ testDebuggingPanel()
 \description{
 testDebuggingPanel() to test this package.
 }
-

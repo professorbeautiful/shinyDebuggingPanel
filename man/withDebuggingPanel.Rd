@@ -9,4 +9,3 @@ withDebuggingPanel()
 \description{
 For inclusion in your UI.
 }
-
