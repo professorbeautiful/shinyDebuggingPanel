@@ -80,7 +80,7 @@ makeDebuggingPanelOutput = function(
           #alertText = rValuesDebugging_R$capturedOutput
           showModal(
           modalDialog(
-              title = "I hope so SO MUCH",
+              title = evalString,
               easy_close = TRUE,  #doesn't work. you need the cancel button.
             #  (alertText),
             div(style='text-align:left; color:red',
