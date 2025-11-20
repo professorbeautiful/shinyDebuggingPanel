@@ -76,7 +76,8 @@ makeDebuggingPanelOutput = function(
           print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
           showModal(
           modalDialog(
-              title = evalString,
+              title = div(span(style='text-align:left; color:blue',
+                               em("To close this popup, TAB then RETURN")), br(), evalString),
               easy_close = TRUE,  #doesn't work. you need the cancel button.
             div(style='text-align:left; color:red',
                 HTML(paste(collapse='<br/>',     # note the '/'.
