@@ -3,9 +3,9 @@ title: testDebuggingPanel
 runtime: shiny
 ---
 
-```{r makeDebuggingPanelOutput, eval=TRUE, echo=FALSE}
+```{r makeDebuggingPanelOutput, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-invisible(require(shinyjs, quietly = T) )
+invisible(require(shinyjs, quietly = T, warn.conflicts = FALSE) )
 invisible(require(shinyDebuggingPanel, quietly = T) )
 invisible(require(knitr, quietly = T) )
 shinyjs::useShinyjs(rmd = TRUE)
