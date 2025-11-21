@@ -1,0 +1,81 @@
+---
+title: testDebuggingPanel
+runtime: shiny
+output: html_document
+---
+
+```{r makeDebuggingPanelOutput, eval=TRUE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+invisible(require(shinyjs) )
+invisible(require(knitr) )
+shinyjs::useShinyjs(rmd = TRUE)
+
+shiny::addResourcePath("shinyjs", system.file("srcjs", package = "shinyjs"))
+
+  observeEvent(input$ctrlDpressed, {}) # just to flush the ctrl-D press.
+  includeScript('www/KeyHandler.js')
+
+if(!require(shinyDebuggingPanel))
+  devtools::install_github('professorbeautiful/shinyDebuggingPanel')
+
+observeEvent(input$ctrlDpressed, {}) # just to flush the ctrl-D press.
+thisSession <<- shiny::getDefaultReactiveDomain()
+shinyDebuggingPanel::makeDebuggingPanelOutput(session = thisSession,
+  toolsInitialState = TRUE,
+   condition='ctrlDpressed === true')
+```
+
+
+```{r withDebuggingPanel, eval=TRUE}
+
+library(shinyjs)
+
+fluidRow(
+shinyDebuggingPanel::withDebuggingPanel()
+)
+```
+
+```{r echo=F}
+#shinyUI(
+  div(
+    title="shinyDebuggingPanel",
+    div(h1("A simple example"),
+        hr(),
+        shinyDebuggingPanel::withDebuggingPanel(),
+        h4('To use this facility:'),
+        div(style='font-size:larger; font-color:red', strong(em('Toggle ON (and off) the Debugging Panel with control-D.'))),
+        pre(
+"
+Select R or JS for your language, type an expression in the box,
+and click the 'evaluate' button.
+Use the counter to retrieve previous commands.
+"
+        ),
+        h4('To add this facility to your app:'),
+        pre(
+"
+- install the package with
+    install_github('professorbeautiful/shinyDebuggingPanel')
+- insert
+    require(shinyDebuggingPanel)
+into the global code for your app,
+- insert
+    withDebuggingPanel()
+into your UI,
+- insert
+      makeDebuggingPanelOutput(session, toolsInitialState = TRUE, condition='true')
+into your server code.",
+            br(),
+            pre(
+paste("Use the 'condition' arg to set up a toggle for visibility of the panel,
+for example driven by pressing a shortcut key.
+Look at KeyHandler.js if you want to change from  control-D to a different sequence.
+All key responses should be in the same file.
+It is in the folder 
+", 
+system.file('shinyDebuggingPanel', 'www', package='shinyDebuggingPanel')))
+        )
+    )
+  )
+
+```
