@@ -4,6 +4,7 @@
 #'
 testDebuggingPanel = function() {
   require(shiny)
-  runApp(system.file(package = "shinyDebuggingPanel",
-                     "shinyDebuggingPanel"))
+  #run('inst/shinyDebuggingPanel/testDebuggingPanel.Rmd')
+  run(system.file(package = "shinyDebuggingPanel", "shinyDebuggingPanel",
+                     "testDebuggingPanel.Rmd"))
 }

@@ -29,7 +29,7 @@ thisSession <<- shiny::getDefaultReactiveDomain()
 output <<- thisSession$output
 ```
 ```{r c3}
-makeDebuggingPanelOutput(session = thisSession,
+shinyDebuggingPanel::makeDebuggingPanelOutput(session = thisSession,
   toolsInitialState = TRUE,
    condition='ctrlDpressed === true')
 ```
