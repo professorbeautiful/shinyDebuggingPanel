@@ -43,7 +43,7 @@ shinyDebuggingPanel::withDebuggingPanel()
         hr(),
         shinyDebuggingPanel::withDebuggingPanel(),
         h4('To use this facility:'),
-        div(style='font-size:larger; font-color:red', strong(em('Toggle ON (and off) the Debugging Panel with control-D.'))),
+        div(style='color:red', strong(em('Toggle ON (and off) the Debugging Panel with control-D.'))),
         pre(
 "
 Select R or JS for your language, type an expression in the box,
