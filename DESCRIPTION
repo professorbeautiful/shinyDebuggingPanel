@@ -10,5 +10,6 @@ Description: Provides support for including a handy panel in your shiny app
 License: file LICENSE
 Depends:
     shiny,
-    shinyBS
+    shinyBS,
+    rmarkdown
 RoxygenNote: 7.3.3
