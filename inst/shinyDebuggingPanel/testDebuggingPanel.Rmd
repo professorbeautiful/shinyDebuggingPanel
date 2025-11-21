@@ -9,9 +9,9 @@ invisible(require(shiny, quietly = T, warn.conflicts = FALSE) )
 invisible(require(shinyjs, quietly = T, warn.conflicts = FALSE) )
 invisible(require(shinyDebuggingPanel, quietly = T) )
 invisible(require(knitr, quietly = T) )
-shinyjs::useShinyjs(rmd = TRUE)
+invisible(shinyjs::useShinyjs(rmd = TRUE))
 
-shiny::addResourcePath("shinyjs", system.file("srcjs", package = "shinyjs"))
+##shiny::addResourcePath("shinyjs", system.file("srcjs", package = "shinyjs"))
 ```
 
 ```{r c1}
