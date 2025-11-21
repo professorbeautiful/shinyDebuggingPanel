@@ -284,6 +284,7 @@ makeDebuggingPanelOutput = function(
     })  ### end of call to expression()
 parentFrameNumber = 1
 #cat('parentFrameNumber = ', parentFrameNumber, '\n')
+#  OK-   assign('debugToolsExpression.saved', debugToolsExpression, pos=1)
 eval(debugToolsExpression, envir = parent.frame(parentFrameNumber))
 #cat('debugToolsExpression eval done ', '\n')
 }
