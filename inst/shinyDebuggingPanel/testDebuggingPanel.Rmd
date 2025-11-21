@@ -6,6 +6,7 @@ runtime: shiny
 ```{r makeDebuggingPanelOutput, eval=TRUE, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 invisible(require(shinyjs, quietly = T) )
+invisible(require(shinyDebuggingPanel, quietly = T) )
 invisible(require(knitr, quietly = T) )
 shinyjs::useShinyjs(rmd = TRUE)
 
