@@ -5,13 +5,16 @@ runtime: shiny
 
 ```{r makeDebuggingPanelOutput, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+invisible(require(shiny, quietly = T, warn.conflicts = FALSE) )
 invisible(require(shinyjs, quietly = T, warn.conflicts = FALSE) )
 invisible(require(shinyDebuggingPanel, quietly = T) )
 invisible(require(knitr, quietly = T) )
 shinyjs::useShinyjs(rmd = TRUE)
 
 shiny::addResourcePath("shinyjs", system.file("srcjs", package = "shinyjs"))
+```
 
+```{r c1}
   observeEvent(input$ctrlDpressed, {}) # just to flush the ctrl-D press.
   includeScript('www/KeyHandler.js')
 
@@ -19,8 +22,14 @@ if(!require(shinyDebuggingPanel, quietly = T))
   devtools::install_github('professorbeautiful/shinyDebuggingPanel')
 require(shinyDebuggingPanel, quietly = T)
 observeEvent(input$ctrlDpressed, {}) # just to flush the ctrl-D press.
+```
+
+```{r c2}
 thisSession <<- shiny::getDefaultReactiveDomain()
-shinyDebuggingPanel::makeDebuggingPanelOutput(session = thisSession,
+output <<- thisSession$output
+```
+```{r c3}
+makeDebuggingPanelOutput(session = thisSession,
   toolsInitialState = TRUE,
    condition='ctrlDpressed === true')
 ```
@@ -35,7 +44,7 @@ shinyDebuggingPanel::withDebuggingPanel()
 )
 ```
 
-```{r echo=F}
+```{r c4, echo=F}
 #shinyUI(
   div(
     title="shinyDebuggingPanel",
