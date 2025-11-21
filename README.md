@@ -1,7 +1,13 @@
 # shinyDebuggingPanel
 shinyDebuggingPanel R package. 
 
-You can include this panel in any shiny project.
+You can include this panel in any shiny project, 
+including  within Rmd files.
+
+For an example, open testDebuggingPanel.Rmd and click "Run Document".    
+Or run this line:  
+rmarkdown::run(system.file(package = "shinyDebuggingPanel", 
+"shinyDebuggingPanel", "testDebuggingPanel.Rmd"))
 
 Place shinyDebuggingPanel::makeDebuggingPanelOutput(session) 
 inside your call to shinyServer(server.R). 
