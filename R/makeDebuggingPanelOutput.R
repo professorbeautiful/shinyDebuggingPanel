@@ -142,10 +142,10 @@ makeDebuggingPanelOutput = function(
           })
       })
 
-      output$evaluatedOutputJS = renderText({
-        shinyalert('JS output is in a popup alert window, if there was no error. Otherwise nothing happens')
-      }
-      )
+      # output$evaluatedOutputJS = renderText({
+      #   #shinyalert('JS output is in a popup alert window, if there was no error. Otherwise nothing happens')
+      # }
+      # )
 
       output$JSevaluation = renderUI({
         if(wasClicked(input$evalButtonJS) ) {
