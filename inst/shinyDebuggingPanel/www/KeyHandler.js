@@ -10,6 +10,9 @@ $(document).on("keyup", function (event) {
     x = event.which || event.keyCode;
     keyVar = x;
     eventSaved = event;
+    if(x==13 && event.ctrlKey) { // control returnKey
+      document.getElementById('evalButtonR').click();
+    }
     if(x==68 && event.ctrlKey) { // control d
       ctrlDpressed = ! ctrlDpressed;  // toggle
       Shiny.onInputChange("ctrlDpressed", ctrlDpressed);
@@ -27,4 +30,13 @@ $(document).on("keyup", function (event) {
         navigateToY(savedYposition+Yoffset);
       }
     }
+    Shiny.onInputChange("Latestkeypressedx", x);
+    Shiny.onInputChange("Latestkeypressede", event.code);
+    if(x==27) { // escape key
+      //navigateToId(currentLocationId);
+      Key_pressed_for_navigateToY = true;
+      Shiny.onInputChange("KeypressedfornavigateToY",
+        Key_pressed_for_navigateToY);
+      navigateToY(savedYposition);
+  }
 });
