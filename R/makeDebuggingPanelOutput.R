@@ -236,10 +236,10 @@ makeDebuggingPanelOutput = function(
         )
       )
       fluidRow_debugToolsCheckbox = fluidRow( style="color: blue",
-                                              column(4, checkboxInput(
-                                                inputId='debugToolsCheckbox', value=toolsInitialState,
-                                                label=em(strong("Show box of code to evaluate")))
-                                              ),
+                                              # column(4, checkboxInput(
+                                              #   inputId='debugToolsCheckbox', value=toolsInitialState,
+                                              #   label=em(strong("Show box of code to evaluate")))
+                                              # ),
                                               column(4, radioButtons('id_languageChoice',
                                                                      choices=c('R', 'JS'),
                                                                      selected = 'R',
@@ -265,16 +265,16 @@ makeDebuggingPanelOutput = function(
               ,
               fluidRow_debugToolsCheckbox
               ,
-              conditionalPanel(
-                'input.debugToolsCheckbox',
+              # conditionalPanel(
+              #   'input.debugToolsCheckbox',
                 conditionalPanel(
                   'input.id_languageChoice=="R"',
                   fluidRow_R)
                 ,
                 conditionalPanel(
                   'input.id_languageChoice=="JS"',
-                  fluidRow_JS)
-              ),
+                  fluidRow_JS),
+              # ),
               list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
               uiOutput(outputId='JSevaluation')
           )
