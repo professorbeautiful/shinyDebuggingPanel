@@ -13,7 +13,8 @@ makeDebuggingPanelOutput = function(
   toolsInitialState=FALSE,
   condition='true',
   initialTraceValue=FALSE,
-  includePreambleFeature = TRUE) {
+  includePreambleFeature = TRUE,
+  verbose=0) {
 
   # if( ! require('shinyalert')) {
   #   devtools::install_github('daattali/shinyalert', quietly=TRUE, warn.conflicts=FALSE)
@@ -66,24 +67,30 @@ makeDebuggingPanelOutput = function(
       bindEvent(
         observe({
           evalString = isolate(input$evalStringR)
-          print(paste('evalString', evalString))
+          if(verbose>1) print(paste('evalString', evalString))
           rValuesDebugging_R$evalStringHistory =
             c(rValuesDebugging_R$evalStringHistory, evalString)
-          cat("length evalStringHistory = ",
+          if(verbose>1) cat("length evalStringHistory = ",
               length(rValuesDebugging_R$evalStringHistory),  '\n')
           rValuesDebugging_R$capturedOutput =
             capture.output(try(eval(parse(text=evalString))))
-          print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
+          if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
           showModal(
           modalDialog(
               title = div(span(style='text-align:left; color:blue',
                                em("To close this popup, TAB then RETURN")), br(), evalString),
               easy_close = TRUE,  #doesn't work. you need the cancel button.
-            div(style='text-align:left; color:red',
+              ### so far no solution for scrollbar inside modalDialog.
+              wellPanel(style='text-align:left; color:red',
+                align = "center",
+                scroller::use_scroller(animationLength = 2000), # add use_scroller() in the UI
+                h1("Shiny with scroller"),(
                 HTML(paste(collapse='<br/>',     # note the '/'.
-                      rValuesDebugging_R$capturedOutput))),
+                      rValuesDebugging_R$capturedOutput)))
+                ),
               footer=modalButton('cancel')
-            )
+
+          )
           )
           updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
                                        value = length(rValuesDebugging_R$evalStringHistory),
@@ -98,7 +105,7 @@ makeDebuggingPanelOutput = function(
       wrapperToGetKeys <<- function(x) 'Object.keys(' %&% x %&% ')'
 
       observeEvent(input$idJSlineNum, {
-        print(input$idJSlineNum)
+        if(verbose>1) print(input$idJSlineNum)
         if(!is.na(input$idJSlineNum) & (input$idJSlineNum > 0) &
            input$idJSlineNum <= length(rValuesDebugging_JS$evalStringHistory)) {
           print(rValuesDebugging_JS$evalStringHistory[[input$idJSlineNum]])
