@@ -31,7 +31,8 @@ output <<- thisSession$output
 ```{r c3}
 shinyDebuggingPanel::makeDebuggingPanelOutput(session = thisSession,
   toolsInitialState = TRUE,
-   condition='ctrlDpressed === true')
+   condition='ctrlDpressed === true', 
+  verbose=2)
 ```
 
 
