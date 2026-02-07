@@ -64,21 +64,23 @@ makeDebuggingPanelOutput = function(
       assign('%&%',  function (a, b) paste(a, b, sep = ''))
       catn = function(...) cat(..., '\n')
 
-      bindEvent(
-        observe({
+      #bindEvent(   #input$evalButtonR
+        observeEvent(input$evalButtonR, {
           evalString = isolate(input$evalStringR)
-          #if(verbose>1) print(paste('evalString', evalString))
+
+          if(verbose>0) print(paste('evalString', evalString))
           rValuesDebugging_R$evalStringHistory =
             c(rValuesDebugging_R$evalStringHistory, evalString)
-          #if(verbose>1) cat("length evalStringHistory = ",
-          #    length(rValuesDebugging_R$evalStringHistory),  '\n')
+          if(verbose>0) cat("length evalStringHistory = ",
+              length(rValuesDebugging_R$evalStringHistory),  '\n')
           rValuesDebugging_R$capturedOutput =
             capture.output(try(eval(parse(text=evalString))))
-          #if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
+          if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
           showModal(
             modalDialog(
               title = div(span(style='text-align:left; color:blue',
-                               em("To close this popup, TAB then RETURN")), br(), evalString),
+                               em("To close this popup, TAB then RETURN")), br(),
+                          HTML(gsub('\n', br(), evalString) ) ),
               easy_close = TRUE,  #doesn't work. you need the cancel button.
               ### so far no solution for scrollbar inside modalDialog.
               # wellPanel(style='text-align:left; color:red',
@@ -96,9 +98,8 @@ makeDebuggingPanelOutput = function(
           updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
                                        value = length(rValuesDebugging_R$evalStringHistory),
                                        max = length(rValuesDebugging_R$evalStringHistory))
-        }),
-        input$evalButtonR
-      )
+        })
+
 
       outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
       # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
@@ -192,10 +193,13 @@ makeDebuggingPanelOutput = function(
       })   #### OK this works now.
 
       observeEvent(input$idRlineNum, {
-        print(input$idRlineNum)
+        #if(verbose > 0)
+          print(paste('input$idRlineNum', input$idRlineNum) )
         if(!is.na(input$idRlineNum) & (input$idRlineNum > 0) &
            input$idRlineNum <= length(rValuesDebugging_R$evalStringHistory)) {
-          print(rValuesDebugging_R$evalStringHistory[[input$idRlineNum]])
+          print(paste('Updating evalStringR with ', 'input$idRlineNum', input$idRlineNum,
+                      ':',
+                      rValuesDebugging_R$evalStringHistory[[input$idRlineNum]]) )
           updateTextAreaInput(label=' ', session = thisSession, inputId = 'evalStringR',
                               value = rValuesDebugging_R$evalStringHistory
                               [[input$idRlineNum]])
