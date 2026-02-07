@@ -15,7 +15,7 @@ makeDebuggingPanelOutput = function(
   initialTraceValue=FALSE,
   includePreambleFeature = TRUE,
   verbose=0) {
-
+  verbose <<- verbose
   # if( ! require('shinyalert')) {
   #   devtools::install_github('daattali/shinyalert', quietly=TRUE, warn.conflicts=FALSE)
   # }
