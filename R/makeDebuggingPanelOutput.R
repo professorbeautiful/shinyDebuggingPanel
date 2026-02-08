@@ -286,7 +286,7 @@ makeDebuggingPanelOutput = function(
                                                      # inputId='debugToolsCheckbox_JS', value=toolsInitialState,
                                                      # label=em(strong("Debug a shiny apps: evaluate R and JS")))
                                               ),
-                                              column(4, checkboxInput(
+                                              column(4, offset=4, checkboxInput(
                                                 inputId="traceCheckbox",
                                                 value=initialTraceValue,
                                                 label=em(strong(textOutput("shiny.trace.text")))
