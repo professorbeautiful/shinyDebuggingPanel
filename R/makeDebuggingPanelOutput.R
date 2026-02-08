@@ -93,8 +93,12 @@ makeDebuggingPanelOutput = function(
               #                scroller::use_scroller(animationLength = 2000), # add use_scroller() in the UI
               #                h1("Shiny with scroller"),
 
-              HTML(paste(collapse='<br/>',     # note the '/'.
-                         rValuesDebugging_R$capturedOutput))
+              div(style='font-family:monaco',
+                  HTML(gsub(' ', '&nbsp;', paste(collapse='<br/>',     # note the '/'.
+                         rValuesDebugging_R$capturedOutput)
+                        )
+                  )
+              )
               ,
               footer=modalButton('cancel')
 
