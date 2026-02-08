@@ -69,6 +69,7 @@ makeDebuggingPanelOutput = function(
       observeEvent(input$evalStringR, {
         rV$Rcommand = input$evalStringR
       })
+
       #bindEvent(   #input$evalButtonR
         observeEvent(input$evalButtonR, {
           evalString = rV$Rcommand
@@ -81,11 +82,27 @@ makeDebuggingPanelOutput = function(
           rValuesDebugging_R$capturedOutput =
             capture.output(try(eval(parse(text=evalString))))
           if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
+          observeEvent(input$idCopyToPB, {
+            if(wasClicked(input$idCopyToPB))
+              write(rValuesDebugging_R$capturedOutput,
+                    file=pipe('pbcopy')
+              )
+          })
           showModal(
             modalDialog(
-              title = div(span(style='text-align:left; color:blue',
-                               em("To close this popup, TAB then RETURN")), br(),
-                          HTML(gsub('\n', br(), evalString) ) ),
+              title = div(
+                fluidRow(
+                  column(8, style='text-align:left; color:blue',
+                               em("To close this popup, TAB then RETURN")
+                         )
+                  ,
+                column(4, style='font-size:x-small;', actionButton('idCopyToPB',
+                             HTML('Click to "ctrl/cmd C"',
+                                  '<br/>the result.'))
+                       )
+                ),
+                HTML(gsub('\n', br(), evalString) )
+              ),
               easy_close = TRUE,  #doesn't work. you need the cancel button.
               ### so far no solution for scrollbar inside modalDialog.
               # wellPanel(style='text-align:left; color:red',
