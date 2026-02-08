@@ -32,6 +32,7 @@ makeDebuggingPanelOutput = function(
                                         capturedOutput="")
   rValuesDebugging_JS <<- reactiveValues(evalStringHistory=list())
 
+  rV <<- reactiveValues(Rcommand = 'hello')
 
   if(includePreambleFeature) {
     preamble1checkbox <<-
@@ -64,9 +65,13 @@ makeDebuggingPanelOutput = function(
       assign('%&%',  function (a, b) paste(a, b, sep = ''))
       catn = function(...) cat(..., '\n')
 
+
+      observeEvent(input$evalStringR, {
+        rV$Rcommand = input$evalStringR
+      })
       #bindEvent(   #input$evalButtonR
         observeEvent(input$evalButtonR, {
-          evalString = isolate(input$evalStringR)
+          evalString = rV$Rcommand
 
           if(verbose>0) print(paste('evalString', evalString))
           rValuesDebugging_R$evalStringHistory =
@@ -203,6 +208,7 @@ makeDebuggingPanelOutput = function(
           updateTextAreaInput(label=' ', session = thisSession, inputId = 'evalStringR',
                               value = rValuesDebugging_R$evalStringHistory
                               [[input$idRlineNum]])
+          rV$Rcommand = rValuesDebugging_R$evalStringHistory [[input$idRlineNum]]
         }
       })
       fluidRow_R =  fluidRow(
