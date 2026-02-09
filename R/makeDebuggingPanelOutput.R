@@ -81,7 +81,13 @@ makeDebuggingPanelOutput = function(
                           length(rValuesDebugging_R$evalStringHistory),  '\n')
         rValuesDebugging_R$capturedOutput =
           capture.output(try(eval(parse(text=evalString))))
+        rValuesDebugging_R$lineWidths =
+          sapply(strsplit(split = '\n',
+                          rValuesDebugging_R$capturedOutput), nchar)
+        rValuesDebugging_R$maxWidth =
+          max(rValuesDebugging_R$lineWidths)
         if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
+        if(verbose>1) print(paste('rValuesDebugging_R$lineWidths', rValuesDebugging_R$lineWidths))
         observeEvent(input$idCopyToPB, {
           if(wasClicked(input$idCopyToPB))
             write(rValuesDebugging_R$capturedOutput,
