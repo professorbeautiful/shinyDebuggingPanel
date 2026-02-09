@@ -92,18 +92,21 @@ makeDebuggingPanelOutput = function(
           modalDialog(
             title = div(
               fluidRow(
-                column(8, style='text-align:left; color:blue',
-                       em("To close this popup, TAB then RETURN")
+                column(7, style='text-align:left; color:blue',
+                       em("To close this popup:"),
+                       modalButton('cancel')
                 )
                 ,
-                column(4, style='font-size:x-small;', actionButton('idCopyToPB',
-                                                                   HTML('Click to "ctrl/cmd C"',
-                                                                        '<br/>the result.'))
+                column(4, style='font-size:x-small;',
+                       actionButton('idCopyToPB',
+                                    HTML('Click here to "ctrl/cmd C"',
+                                         '<br/>the entire result.',
+                                         '<br/>(ctrl/cmd A is not helpful.)'))
                 )
               ),
               HTML(gsub('\n', br(), evalString) )
             ),
-            easy_close = TRUE,  #doesn't work. you need the cancel button.
+            # easy_close = TRUE,  #doesn't work. you need the cancel button.
             ### so far no solution for scrollbar inside modalDialog.
             # wellPanel(style='text-align:left; color:red',
             #           align = "center",
@@ -116,8 +119,6 @@ makeDebuggingPanelOutput = function(
                 )
                 )
             )
-            ,
-            footer=modalButton('cancel')
 
           ) )
 
@@ -249,8 +250,8 @@ makeDebuggingPanelOutput = function(
                       numericInput('idRlineNum',
                                    label = HTML("<font color='white' style='font-weight:bold'>
                                Command history</font>"),
-                                   width = '150px',
-                                   value = 1, min=1)
+                                   #width = '150px',
+                                   value = 1, min=1, step=1)
             )
             ,  column(3,                      numericInput('idWidth',
                                    label =    HTML("<font color='white' style='font-weight:bold'>
