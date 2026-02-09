@@ -9,12 +9,12 @@
 ## We begin with some convenient assignments and function.
 
 makeDebuggingPanelOutput = function(
-  session=NULL,
-  toolsInitialState=FALSE,
-  condition='true',
-  initialTraceValue=FALSE,
-  includePreambleFeature = TRUE,
-  verbose=0) {
+    session=NULL,
+    toolsInitialState=FALSE,
+    condition='true',
+    initialTraceValue=FALSE,
+    includePreambleFeature = TRUE,
+    verbose=0) {
   verbose <<- verbose
   # if( ! require('shinyalert')) {
   #   devtools::install_github('daattali/shinyalert', quietly=TRUE, warn.conflicts=FALSE)
@@ -42,8 +42,8 @@ makeDebuggingPanelOutput = function(
         label="prepend/remove Output Preamble")
     preamble2checkbox <<-
       checkboxInput(inputId="prependInputPreambleToggle",
-                  value=FALSE,
-                  label="prepend/remove Input Preamble")
+                    value=FALSE,
+                    label="prepend/remove Input Preamble")
   } else {
     preamble1checkbox <<- " "
     preamble2checkbox <<- " "
@@ -71,60 +71,60 @@ makeDebuggingPanelOutput = function(
       })
 
       #bindEvent(   #input$evalButtonR
-        observeEvent(input$evalButtonR, {
-          evalString = rV$Rcommand
+      observeEvent(input$evalButtonR, {
+        evalString = rV$Rcommand
 
-          if(verbose>0) print(paste('evalString', evalString))
-          rValuesDebugging_R$evalStringHistory =
-            c(rValuesDebugging_R$evalStringHistory, evalString)
-          if(verbose>0) cat("length evalStringHistory = ",
-              length(rValuesDebugging_R$evalStringHistory),  '\n')
-          rValuesDebugging_R$capturedOutput =
-            capture.output(try(eval(parse(text=evalString))))
-          if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
-          observeEvent(input$idCopyToPB, {
-            if(wasClicked(input$idCopyToPB))
-              write(rValuesDebugging_R$capturedOutput,
-                    file=pipe('pbcopy')
-              )
-          })
-          showModal(
-            modalDialog(
-              title = div(
-                fluidRow(
-                  column(8, style='text-align:left; color:blue',
-                               em("To close this popup, TAB then RETURN")
-                         )
-                  ,
-                column(4, style='font-size:x-small;', actionButton('idCopyToPB',
-                             HTML('Click to "ctrl/cmd C"',
-                                  '<br/>the result.'))
-                       )
-                ),
-                HTML(gsub('\n', br(), evalString) )
-              ),
-              easy_close = TRUE,  #doesn't work. you need the cancel button.
-              ### so far no solution for scrollbar inside modalDialog.
-              # wellPanel(style='text-align:left; color:red',
-              #           align = "center",
-              #                scroller::use_scroller(animationLength = 2000), # add use_scroller() in the UI
-              #                h1("Shiny with scroller"),
-
-              div(style='font-family:monaco',
-                  HTML(gsub(' ', '&nbsp;', paste(collapse='<br/>',     # note the '/'.
-                         rValuesDebugging_R$capturedOutput)
-                        )
-                  )
-              )
-              ,
-              footer=modalButton('cancel')
-
-            ) )
-
-          updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
-                                       value = length(rValuesDebugging_R$evalStringHistory),
-                                       max = length(rValuesDebugging_R$evalStringHistory))
+        if(verbose>0) print(paste('evalString', evalString))
+        rValuesDebugging_R$evalStringHistory =
+          c(rValuesDebugging_R$evalStringHistory, evalString)
+        if(verbose>0) cat("length evalStringHistory = ",
+                          length(rValuesDebugging_R$evalStringHistory),  '\n')
+        rValuesDebugging_R$capturedOutput =
+          capture.output(try(eval(parse(text=evalString))))
+        if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
+        observeEvent(input$idCopyToPB, {
+          if(wasClicked(input$idCopyToPB))
+            write(rValuesDebugging_R$capturedOutput,
+                  file=pipe('pbcopy')
+            )
         })
+        showModal(
+          modalDialog(
+            title = div(
+              fluidRow(
+                column(8, style='text-align:left; color:blue',
+                       em("To close this popup, TAB then RETURN")
+                )
+                ,
+                column(4, style='font-size:x-small;', actionButton('idCopyToPB',
+                                                                   HTML('Click to "ctrl/cmd C"',
+                                                                        '<br/>the result.'))
+                )
+              ),
+              HTML(gsub('\n', br(), evalString) )
+            ),
+            easy_close = TRUE,  #doesn't work. you need the cancel button.
+            ### so far no solution for scrollbar inside modalDialog.
+            # wellPanel(style='text-align:left; color:red',
+            #           align = "center",
+            #                scroller::use_scroller(animationLength = 2000), # add use_scroller() in the UI
+            #                h1("Shiny with scroller"),
+
+            div(style='font-family:monaco',
+                HTML(gsub(' ', '&nbsp;', paste(collapse='<br/>',     # note the '/'.
+                                               rValuesDebugging_R$capturedOutput)
+                )
+                )
+            )
+            ,
+            footer=modalButton('cancel')
+
+          ) )
+
+        updateNumericInput(label = ' ', session = thisSession, inputId = 'idRlineNum',
+                           value = length(rValuesDebugging_R$evalStringHistory),
+                           max = length(rValuesDebugging_R$evalStringHistory))
+      })
 
 
       outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
@@ -175,17 +175,20 @@ makeDebuggingPanelOutput = function(
             # But does it kick off the labelNode error when one of
             # the checkboxes is clicked?
           })
-      })
+        })
 
       # output$evaluatedOutputJS = renderText({
       #   #shinyalert('JS output is in a popup alert window, if there was no error. Otherwise nothing happens')
       # }
       # )
-
+      observeEvent('idWidth', {
+        if(!is.null(input$idWidth))
+          options(width = input$idWidth)
+      })
       output$JSevaluation = renderUI({
         if(wasClicked(input$evalButtonJS) ) {
           evalString = gsub('"', "'", isolate(input$evalStringJS))
-            # replace all DQ with SQ. May not always be the right fix.
+          # replace all DQ with SQ. May not always be the right fix.
           isolate({
             rValuesDebugging_JS$evalStringHistory =
               c(rValuesDebugging_JS$evalStringHistory, evalString);
@@ -220,7 +223,7 @@ makeDebuggingPanelOutput = function(
 
       observeEvent(input$idRlineNum, {
         #if(verbose > 0)
-          print(paste('input$idRlineNum', input$idRlineNum) )
+        print(paste('input$idRlineNum', input$idRlineNum) )
         if(!is.na(input$idRlineNum) & (input$idRlineNum > 0) &
            input$idRlineNum <= length(rValuesDebugging_R$evalStringHistory)) {
           print(paste('Updating evalStringR with ', 'input$idRlineNum', input$idRlineNum,
@@ -232,23 +235,40 @@ makeDebuggingPanelOutput = function(
           rV$Rcommand = rValuesDebugging_R$evalStringHistory [[input$idRlineNum]]
         }
       })
-      fluidRow_R =  fluidRow(
-        column(2, offset = 1,
-               actionButton(
-                 "evalButtonR",
-                 HTML(
-                   "<font color='dark red' style='font-weight:bold'> evaluate R</font>")),
-               numericInput('idRlineNum',  label = "command\nhistory",
-                            width = '100px',
-                            value = 1, min=1)
-        ),
-        column(9,
-               tagAppendAttributes(
-                 style="width:550px; height:150px;",
-                 tags$textarea(
-                   id = "evalStringR", label="R code",
-                   value="1234"))
-        ),
+      fluidRow_R =
+        div(
+          fluidRow(
+            column(3, offset = 2,
+                   br(),
+                   actionButton(
+                     "evalButtonR",
+                     HTML(
+                       "<font color='dark red' style='font-weight:bold'> evaluate R</font>")),
+            )
+            ,  column(2,
+                      numericInput('idRlineNum',
+                                   label = HTML("<font color='white' style='font-weight:bold'>
+                               Command history</font>"),
+                                   width = '150px',
+                                   value = 1, min=1)
+            )
+            ,  column(3,                      numericInput('idWidth',
+                                   label =    HTML("<font color='white' style='font-weight:bold'>
+                                Line width for panel</font>"),
+                                   value = getOption('width'), min = 30, max=300, step = 1)
+
+            ) ),
+          fluidRow(
+            column(8, offset=2,
+                   tagAppendAttributes(
+                     style="width:650px; height:150px;",
+                     tags$textarea(
+                       id = "evalStringR", label="R code",
+                       value="1234")
+          )
+            ))
+        )  ###end of  fluidRow_R
+
       #   tagAppendAttributes(width=800,
       #                       style='text-align:"right"; color:green',
       #                       bsModal(id = 'evaluateR_popup',
@@ -256,7 +276,7 @@ makeDebuggingPanelOutput = function(
       #                               trigger = "evalButtonR",
       #                               size="large",
       #                               uiOutput(outputId="evaluatedOutputR")))
-      )
+
       fluidRow_JS =  fluidRow(
         column(2, offset = 1,
                actionButton( inputId = "evalButtonJS",
@@ -267,7 +287,7 @@ makeDebuggingPanelOutput = function(
         ),
         column(9, tagAppendAttributes(
           style="width:550px; height:150px;",
-            tags$textarea(id = "evalStringJS",
+          tags$textarea(id = "evalStringJS",
                         value="") )
           ,
           preamble1checkbox,
@@ -296,16 +316,17 @@ makeDebuggingPanelOutput = function(
       #### output$debugTools ####
       output$debugTools =
         renderUI({
-        shiny::conditionalPanel(
-          condition=theShowDebuggerCondition,
-          div(style="background:darkGrey",
-              singleton(tags$script(paste(
-                "outputPreambleJS = '", outputPreambleJS, "';")))
-              ,
-              fluidRow_debugToolsCheckbox
-              ,
-              # conditionalPanel(
-              #   'input.debugToolsCheckbox',
+          shiny::conditionalPanel(
+            condition=theShowDebuggerCondition,
+            div(style="background:darkGrey",
+                singleton(tags$script(paste(
+                  "outputPreambleJS = '", outputPreambleJS, "';")))
+                ,
+                fluidRow_debugToolsCheckbox
+                ,
+                hr(),
+                # conditionalPanel(
+                #   'input.debugToolsCheckbox',
                 conditionalPanel(
                   'input.id_languageChoice=="R"',
                   fluidRow_R)
@@ -313,17 +334,17 @@ makeDebuggingPanelOutput = function(
                 conditionalPanel(
                   'input.id_languageChoice=="JS"',
                   fluidRow_JS),
-              # ),
-              list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
-              uiOutput(outputId='JSevaluation')
+                # ),
+                list(HTML(paste0(rep("&nbsp;",15), collapse=""))),
+                uiOutput(outputId='JSevaluation')
+            )
           )
-        )
-      }) ### end callto renderUI
+        }) ### end callto renderUI
 
     })  ### end of call to expression()
-parentFrameNumber = 1
-#cat('parentFrameNumber = ', parentFrameNumber, '\n')
-#  OK-   assign('debugToolsExpression.saved', debugToolsExpression, pos=1)
-eval(debugToolsExpression, envir = parent.frame(parentFrameNumber))
-#cat('debugToolsExpression eval done ', '\n')
+  parentFrameNumber = 1
+  #cat('parentFrameNumber = ', parentFrameNumber, '\n')
+  #  OK-   assign('debugToolsExpression.saved', debugToolsExpression, pos=1)
+  eval(debugToolsExpression, envir = parent.frame(parentFrameNumber))
+  #cat('debugToolsExpression eval done ', '\n')
 }
