@@ -38,7 +38,7 @@ shinyDebuggingPanel::makeDebuggingPanelOutput(session = thisSession,
 
 ```{r withDebuggingPanel, eval=TRUE}
 
-library(shinyjs)
+require(shinyjs, quietly = T)
 
 fluidRow(
 shinyDebuggingPanel::withDebuggingPanel()
