@@ -82,10 +82,12 @@ makeDebuggingPanelOutput = function(
         rValuesDebugging_R$capturedOutput =
           capture.output(try(eval(parse(text=evalString))))
         rValuesDebugging_R$lineWidths =
-          sapply(strsplit(split = '\n',
+          unlist(
+            sapply(strsplit(split = '\n',
                           rValuesDebugging_R$capturedOutput), nchar)
-        rValuesDebugging_R$maxWidth =
-          max(rValuesDebugging_R$lineWidths)
+          )
+        rValuesDebugging_R$maxWidth =   ### try again another day!
+          max(rValuesDebugging_R$lineWidths, na.rm = TRUE)
         if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
         if(verbose>1) print(paste('rValuesDebugging_R$lineWidths', rValuesDebugging_R$lineWidths))
         observeEvent(input$idCopyToPB, {
