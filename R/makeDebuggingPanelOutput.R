@@ -99,6 +99,10 @@ makeDebuggingPanelOutput = function(
         showModal(
           modalDialog(
             title = div(
+              tags$head(tags$style(paste0(
+                ".modal-dialog{ width:",
+                input$idWidth,
+                "px}")) ),
               fluidRow(
                 column(7, style='text-align:left; color:blue',
                        em("To close this popup:"),
@@ -261,10 +265,12 @@ makeDebuggingPanelOutput = function(
                                    #width = '150px',
                                    value = 1, min=1, step=1)
             )
-            ,  column(3,                      numericInput('idWidth',
+            ,  column(3,
+                      numericInput('idWidth',
                                    label =    HTML("<font color='white' style='font-weight:bold'>
-                                Line width for panel</font>"),
-                                   value = getOption('width'), min = 30, max=300, step = 1)
+                                Width for panel, in pixels</font>"),
+                                   value = getOption('width')* 1200/80,
+                                   min = 500, max=2000, step = 50)
 
             ) ),
           fluidRow(
