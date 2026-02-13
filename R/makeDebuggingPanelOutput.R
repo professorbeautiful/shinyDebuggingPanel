@@ -117,7 +117,9 @@ makeDebuggingPanelOutput = function(
                                          '<br/>(ctrl/cmd A is not helpful.)'))
                 )
               ),
-              HTML(gsub('\n', br(), evalString) )
+              div( style = "overflow-y: auto;",
+                   HTML(gsub('\n', br(), evalString) )
+              )
             ),
             # easy_close = TRUE,  #doesn't work. you need the cancel button.
             ### so far no solution for scrollbar inside modalDialog.
