@@ -89,7 +89,8 @@ makeDebuggingPanelOutput = function(
         rValuesDebugging_R$maxWidth =   ### try again another day!
           max(rValuesDebugging_R$lineWidths, na.rm = TRUE)
         if(verbose>1) print(paste('capturedOutput ', rValuesDebugging_R$evalStringHistory))
-        if(verbose>1) print(paste('rValuesDebugging_R$lineWidths', rValuesDebugging_R$lineWidths))
+        if(verbose>1) print(paste('rValuesDebugging_R$lineWidths'))
+        if(verbose>1) print( table(rValuesDebugging_R$lineWidths))
         observeEvent(input$idCopyToPB, {
           if(wasClicked(input$idCopyToPB))
             write(rValuesDebugging_R$capturedOutput,
